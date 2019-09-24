@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+import java.util.*;
 
 public class Start {
 
@@ -9,7 +11,7 @@ public class Start {
         }
     }
 
-    static GraphViewerPanel graph(String[] args) {
+    static GraphViewerPanel graph(String[] args)  throws IOException {
         GraphReader reader = (args.length < 1)
                 ? defaultGraph()
                 : graphFromArgs(args);
@@ -36,11 +38,18 @@ public class Start {
                 "usage");
     }
 
-    static GraphReader graphFromArgs(String[] args) {
-        return new GraphReader(new String[]{"a-b","b-c","c-d"},"c");
+    static GraphReader graphFromArgs(String[] args) throws IOException {
+        String center = args.length > 0 ? args[0] : null;
+        ArrayList<String> edges = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
+            while (br.ready()) {
+                edges.add(br.readLine());
+            }
+        }
+        return new GraphReader(edges.toArray(new String[0]),center);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)  throws IOException {
         Frame frame = new Frame( "Graph" );
         GraphViewerPanel graph = graph(args);
         frame.addWindowListener( new ExitOnClose());
