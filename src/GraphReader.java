@@ -60,23 +60,33 @@ class GraphReader {
     }
 
     private void addEdges() {
-        for (String str : edgeLines) {
-            int i = str.indexOf('-');
-            if (i > 0) {
-                addEdge(str);
+        for (String line : edgeLines) {
+            if (isValidEdgeFormat(line)) {
+                addEdge(line);
             }
         }
     }
 
-    private void addEdge(String str) {
-        int len = 50;
-        int j = str.indexOf('/');
-        if (j > 0) {
-            len = Integer.valueOf(str.substring(j + 1)).intValue();
-            str = str.substring(0, j);
+    private String[] partsOf(String line) {
+        if (line.length()<1) {
+            return new String[0];
         }
-        int i = str.indexOf('-');
-        addEdge(str.substring(0, i), str.substring(i + 1), len);
+        String ESCAPE = "\\";
+        String separator = ESCAPE + line.substring(0,1);
+        String rest = line.substring(1);
+
+        return rest.split(separator);
+    }
+
+    private boolean isValidEdgeFormat(String line) {
+        String[] parts = partsOf(line);
+        return parts.length == 2 || parts.length == 3;
+    }
+
+    private void addEdge(String line) {
+        String[] parts = partsOf(line);
+        int len = (parts.length == 3) ? Integer.valueOf(parts[2]).intValue() : 50;
+        addEdge(parts[0],parts[1], len);
     }
 
     private void addCenter() {
