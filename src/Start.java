@@ -42,8 +42,8 @@ public class Start {
         String center = args.length > 0 ? args[0] : null;
         ArrayList<String> edges = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
-            while (br.ready()) {
-                edges.add(br.readLine());
+            for (String line = br.readLine();line!=null;line=br.readLine()) {       
+                edges.add(line);
             }
         }
         return new GraphReader(edges.toArray(new String[0]),center);

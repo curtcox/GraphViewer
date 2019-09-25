@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.*;
 
 import static java.lang.Math.random;
 
@@ -19,7 +20,8 @@ class GraphReader {
         this.d = d;
         addEdges();
         addCenter();
-        return new Graph(edges,nodes,d);
+        Graph graph = new Graph(edges,nodes,d);
+        return graph;
     }
 
     private GNode findNodeFromLabel(String lbl) {
@@ -63,6 +65,8 @@ class GraphReader {
         for (String line : edgeLines) {
             if (isValidEdgeFormat(line)) {
                 addEdge(line);
+            } else {
+                System.out.println("Skipping invalid " + Arrays.asList(partsOf(line)));
             }
         }
     }
@@ -71,8 +75,8 @@ class GraphReader {
         if (line.length()<1) {
             return new String[0];
         }
-        String ESCAPE = "\\";
-        String separator = ESCAPE + line.substring(0,1);
+        String e = line.substring(0,1);
+        String separator = "\\Q" + e + "\\E";
         String rest = line.substring(1);
 
         return rest.split(separator);
@@ -86,7 +90,9 @@ class GraphReader {
     private void addEdge(String line) {
         String[] parts = partsOf(line);
         int len = (parts.length == 3) ? Integer.valueOf(parts[2]).intValue() : 50;
-        addEdge(parts[0],parts[1], len);
+        String from = parts[0];
+        String   to = parts[1];
+        addEdge(from, to, len);
     }
 
     private void addCenter() {

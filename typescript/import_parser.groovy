@@ -53,6 +53,6 @@ System.in.withReader { r ->
         def  from = importing(parts[0])
         def    to = imported(parts[1])
         to = absoluteWithRespectTo(to,from)
-        println "$from|$to"
+        println "|$from|$to"
     }
 }
