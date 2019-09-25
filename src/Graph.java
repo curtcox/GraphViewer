@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.*;
 
 class Graph {
 
@@ -50,6 +51,10 @@ class Graph {
             }
         }
         return nearest;
+    }
+
+    public String toString() {
+        return "Graph nodes = " + Arrays.asList(nodes) + " edges = " + Arrays.asList(edges);
     }
 
 }
