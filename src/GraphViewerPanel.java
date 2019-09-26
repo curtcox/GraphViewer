@@ -21,12 +21,12 @@ class GraphViewerPanel extends Panel implements ActionListener, ItemListener {
         add("South", controlPanel);
 
         controlPanel.add(scramble);
-        scramble.addActionListener(this);
         controlPanel.add(shake);
-        shake.addActionListener(this);
         controlPanel.add(stress);
-        stress.addItemListener(this);
         controlPanel.add(relax);
+        scramble.addActionListener(this);
+        shake.addActionListener(this);
+        stress.addItemListener(this);
         relax.addItemListener(this);
     }
 

@@ -44,7 +44,7 @@ class Graph {
         GNode nearest = null;
 
         for (GNode n : nodes) {
-            double dist = (n.x - x) * (n.x - x) + (n.y - y) * (n.y - y);
+            double dist = n.distanceTo(x,y);
             if (dist < bestdist) {
                 nearest = n;
                 bestdist = dist;

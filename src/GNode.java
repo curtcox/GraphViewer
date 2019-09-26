@@ -19,18 +19,19 @@ class GNode {
             x += max(-5, min(5, dx));
             y += max(-5, min(5, dy));
         }
-        if (x < 0) {
-            x = 0;
-        } else if (x > d.width) {
-            x = d.width;
-        }
-        if (y < 0) {
-            y = 0;
-        } else if (y > d.height) {
-            y = d.height;
-        }
+        x = boundBy(x,d.width);
+        y = boundBy(y,d.height);
         dx /= 2;
         dy /= 2;
+    }
+
+    private static double boundBy(double v, double max) {
+        if (v < 0) {
+            v = 0;
+        } else if (v > max) {
+            v = max;
+        }
+        return v;
     }
 
     static void relaxNodes(GNode[] nodes) {
@@ -71,7 +72,6 @@ class GNode {
         }
     }
 
-
     static void shake(GNode[] nodes) {
         for (GNode n : nodes) {
             if (!n.fixed) {
@@ -81,6 +81,9 @@ class GNode {
         }
     }
 
+    double distanceTo(int x, int y) {
+        return (this.x - x) * (this.x - x) + (this.y - y) * (this.y - y);
+    }
 
     public String toString() {
         return label + " @ " + x + "," + y;
