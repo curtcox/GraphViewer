@@ -1,6 +1,8 @@
+import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 
 class GEdge {
+
     final GNode from;
     final GNode to;
     final double len;
@@ -24,6 +26,14 @@ class GEdge {
         to.dy += dy;
         from.dx += -dx;
         from.dy += -dy;
+    }
+
+    int len() {
+        int x1 = (int) from.x;
+        int y1 = (int) from.y;
+        int x2 = (int) to.x;
+        int y2 = (int) to.y;
+        return (int) abs(sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) - len);
     }
 
 

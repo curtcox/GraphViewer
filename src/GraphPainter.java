@@ -82,7 +82,7 @@ class GraphPainter {
         int y1 = (int) e.from.y;
         int x2 = (int) e.to.x;
         int y2 = (int) e.to.y;
-        int len = (int) abs(sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) - e.len);
+        int len = e.len();
         offgraphics.setColor((len < 10)
                 ? arcColor1
                 : (len < 20 ? arcColor2 : arcColor3));
