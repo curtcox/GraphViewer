@@ -2,13 +2,10 @@ import java.awt.*;
 
 class GraphPainter {
 
-    private boolean stress;
     private GNode pick;
-    private final Graph graph;
     private final GraphPanel panel;
 
-    GraphPainter(Graph graph, GraphPanel panel) {
-        this.graph = graph;
+    GraphPainter(GraphPanel panel) {
         this.panel = panel;
     }
 
@@ -39,12 +36,11 @@ class GraphPainter {
         g.setColor((n == pick) ? selectColor : (n.fixed ? fixedColor : nodeColor));
     }
 
-    void update(Graphics g,GNode pick,boolean stress) {
+    void update(Graphics g,Graph graph, GNode pick,boolean stress) {
         this.pick = pick;
-        this.stress = stress;
         updateOffscreenGraphics();
-        drawEdges();
-        drawNodes();
+        drawEdges(graph,stress);
+        drawNodes(graph);
         g.drawImage(offscreen, 0, 0, null);
     }
 
@@ -64,20 +60,20 @@ class GraphPainter {
         offgraphics.fillRect(0, 0, d.width, d.height);
     }
 
-    private void drawNodes() {
+    private void drawNodes(Graph graph) {
         FontMetrics fm = offgraphics.getFontMetrics();
         for (GNode n : graph.nodes) {
             paintNode(offgraphics, n, fm);
         }
     }
 
-    private void drawEdges() {
+    private void drawEdges(Graph graph, boolean stress) {
         for (GEdge e : graph.edges) {
-            drawEdge(e);
+            drawEdge(e,stress);
         }
     }
 
-    private void drawEdge(GEdge e) {
+    private void drawEdge(GEdge e, boolean stress) {
         int x1 = (int) e.from.x;
         int y1 = (int) e.from.y;
         int x2 = (int) e.to.x;

@@ -41,9 +41,9 @@ class GraphReader {
     }
 
     private GNode newNodeAtRandomLocation(String lbl) {
-        GNode n = new GNode(lbl);
-        n.x = 10 + 380 * random();
-        n.y = 10 + 380 * random();
+        double x = 10 + 380 * random();
+        double y = 10 + 380 * random();
+        GNode n = new GNode(lbl,x,y,0,0,false);
         return n;
     }
 
@@ -95,13 +95,12 @@ class GraphReader {
         addEdge(from, to, len);
     }
 
-    private void addCenter() {
+    private GNode addCenter() {
         if (center != null) {
             GNode n = findNodeFromLabel(center);
-            n.x = d.width  / 2;
-            n.y = d.height / 2;
-            n.fixed = true;
+            return n.at(d.width / 2, d.height/2,true);
         }
+        return null;
     }
 
 }

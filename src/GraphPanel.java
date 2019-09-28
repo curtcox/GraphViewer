@@ -31,20 +31,15 @@ class GraphPanel extends Panel {
         }
 
         void dragNode(GNode node, int x, int y) {
-            pick = node;
+            pick = node.atFixed(x,y);
             pickfixed = pick.fixed;
-            pick.fixed = true;
-            pick.x = x;
-            pick.y = y;
         }
 
         @Override
         public void mouseReleased(MouseEvent e) {
             numMouseButtonsDown--;
 
-            pick.fixed = pickfixed;
-            pick.x = e.getX();
-            pick.y = e.getY();
+            pick = pick.at(e.getX(),e.getY(),pickfixed);
             if (numMouseButtonsDown == 0) {
                 pick = null;
             }
@@ -60,8 +55,7 @@ class GraphPanel extends Panel {
     class GraphMouseMotionListener extends MouseAdapter {
         @Override
         public void mouseDragged(MouseEvent e) {
-            pick.x = e.getX();
-            pick.y = e.getY();
+            pick = pick.at(e.getX(),e.getY(),pick.fixed);
             repaint();
             e.consume();
         }
@@ -73,24 +67,24 @@ class GraphPanel extends Panel {
     }
 
     synchronized void relax() {
-        graph.relax();
+        graph = graph.relax();
     }
 
     void scramble() {
-        graph.shake();
+        graph = graph.shake();
     }
 
     void shake() {
-        graph.scramble();
+        graph = graph.scramble();
     }
 
     @Override
     public synchronized void update(Graphics g) {
-        painter.update(g,pick,stress);
+        painter.update(g,graph,pick,stress);
     }
 
     public void start() {
-        painter = new GraphPainter(graph,this);
+        painter = new GraphPainter(this);
         relaxer = new RelaxerThread(this);
         relaxer.start();
     }

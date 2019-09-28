@@ -13,30 +13,30 @@ class Graph {
         this.size = size;
     }
 
-    void relax() {
+    Graph relax() {
         relaxEdges();
         relaxNodes();
+        return this;
     }
 
-    void relaxEdges() {
-        for (GEdge e : edges) {
-            e.relax();
+    private Graph relaxEdges() {
+        return new Graph(GEdge.relax(edges),nodes,size);
+    }
+
+    private Graph relaxNodes() {
+        GNode[] relaxed = GNode.relaxNodes(nodes);
+        for (int i=0; i<relaxed.length; i++) {
+            relaxed[i] = relaxed[i].relax(size);
         }
+        return new Graph(edges,relaxed,size);
     }
 
-    void relaxNodes() {
-        GNode.relaxNodes(nodes);
-        for (GNode n : nodes) {
-            n.relax(size);
-        }
+    Graph scramble() {
+        return new Graph(edges,GNode.scramble(nodes,size),size);
     }
 
-    void scramble() {
-        GNode.scramble(nodes,size);
-    }
-
-    void shake() {
-        GNode.shake(nodes);
+    Graph shake() {
+        return new Graph(edges,GNode.shake(nodes),size);
     }
 
     GNode findNearestNode(int x, int y) {
