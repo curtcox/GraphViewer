@@ -63,21 +63,29 @@ class GNode {
         }
     }
 
+    private void scramble(Dimension d) {
+        if (!fixed) {
+            x = 10 + (d.width - 20)  * random();
+            y = 10 + (d.height - 20) * random();
+        }
+    }
+
+    private void shake() {
+        if (!fixed) {
+            x += 80 * random() - 40;
+            y += 80 * random() - 40;
+        }
+    }
+
     static void scramble(GNode[] nodes,Dimension d) {
         for (GNode n : nodes) {
-            if (!n.fixed) {
-                n.x = 10 + (d.width - 20)  * random();
-                n.y = 10 + (d.height - 20) * random();
-            }
+            n.scramble(d);
         }
     }
 
     static void shake(GNode[] nodes) {
         for (GNode n : nodes) {
-            if (!n.fixed) {
-                n.x += 80 * random() - 40;
-                n.y += 80 * random() - 40;
-            }
+            n.shake();
         }
     }
 
