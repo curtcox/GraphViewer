@@ -28,15 +28,23 @@ class GraphPainter {
     private Graphics offgraphics;
 
     private void paintNode(Graphics g, GNode n, FontMetrics fm) {
-        int x = (int) n.x;
-        int y = (int) n.y;
-        g.setColor((n == pick) ? selectColor : (n.fixed ? fixedColor : nodeColor));
-        int w = fm.stringWidth(n.label) + 10;
-        int h = fm.getHeight() + 4;
-        g.fillRect(x - w / 2, y - h / 2, w, h);
+        int cx = (int) n.x;
+        int cy = (int) n.y;
+        setColor(g,n);
+        int w = fm.stringWidth(n.label);
+        int h = fm.getHeight();
+        int pw = w + 10;
+        int ph = h + 4;
+        int x = cx - pw / 2;
+        int y = cy - ph / 2;
+        g.fillRect(x, y, pw, ph);
         g.setColor(Color.black);
-        g.drawRect(x - w / 2, y - h / 2, w - 1, h - 1);
-        g.drawString(n.label, x - (w - 10) / 2, (y - (h - 4) / 2) + fm.getAscent());
+        g.drawRect(x, y, pw, ph);
+        g.drawString(n.label, cx - w / 2, (cy - h / 2) + fm.getAscent());
+    }
+
+    private void setColor(Graphics g, GNode n) {
+        g.setColor((n == pick) ? selectColor : (n.fixed ? fixedColor : nodeColor));
     }
 
     void update(Graphics g,GNode pick,boolean stress) {
@@ -83,17 +91,23 @@ class GraphPainter {
         int x2 = (int) e.to.x;
         int y2 = (int) e.to.y;
         int len = e.len();
+        drawEdgeLine(x1,y1,x2,y2,len);
+        if (stress) {
+            labelEdgeStress(x1,y1,x2,y2,len);
+        }
+    }
+
+    private void drawEdgeLine(int x1, int y1, int x2, int y2, int len) {
         offgraphics.setColor((len < 10)
                 ? arcColor1
                 : (len < 20 ? arcColor2 : arcColor3));
         offgraphics.drawLine(x1, y1, x2, y2);
-        if (stress) {
-            String lbl = String.valueOf(len);
-            offgraphics.setColor(stressColor);
-            offgraphics.drawString(lbl, x1 + (x2 - x1) / 2, y1 + (y2 - y1)
-                    / 2);
-            offgraphics.setColor(edgeColor);
-        }
+    }
+
+    private void labelEdgeStress(int x1, int y1, int x2, int y2, int len) {
+        String lbl = String.valueOf(len);
+        offgraphics.setColor(stressColor);
+        offgraphics.drawString(lbl, x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2);
     }
 
 }
