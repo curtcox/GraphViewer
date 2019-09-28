@@ -1,22 +1,11 @@
 import java.awt.*;
 
-import static java.lang.Math.*;
-
 class GraphPainter {
 
     private boolean stress;
     private GNode pick;
     private final Graph graph;
     private final GraphPanel panel;
-
-    private static final Color  fixedColor = Color.red;
-    private static final Color selectColor = Color.pink;
-    private static final Color   edgeColor = Color.black;
-    private static final Color   nodeColor = new Color(250, 220, 100);
-    private static final Color stressColor = Color.darkGray;
-    private static final Color   arcColor1 = Color.black;
-    private static final Color   arcColor2 = Color.pink;
-    private static final Color   arcColor3 = Color.red;
 
     GraphPainter(Graph graph, GraphPanel panel) {
         this.graph = graph;
@@ -43,7 +32,10 @@ class GraphPainter {
         g.drawString(n.label, cx - w / 2, (cy - h / 2) + fm.getAscent());
     }
 
+    private static final Color nodeColor = new Color(250, 220, 100);
     private void setColor(Graphics g, GNode n) {
+        final Color  fixedColor = Color.red;
+        final Color selectColor = Color.pink;
         g.setColor((n == pick) ? selectColor : (n.fixed ? fixedColor : nodeColor));
     }
 
@@ -99,14 +91,14 @@ class GraphPainter {
 
     private void drawEdgeLine(int x1, int y1, int x2, int y2, int len) {
         offgraphics.setColor((len < 10)
-                ? arcColor1
-                : (len < 20 ? arcColor2 : arcColor3));
+                ? Color.black
+                : (len < 20 ? Color.pink : Color.red));
         offgraphics.drawLine(x1, y1, x2, y2);
     }
 
     private void labelEdgeStress(int x1, int y1, int x2, int y2, int len) {
         String lbl = String.valueOf(len);
-        offgraphics.setColor(stressColor);
+        offgraphics.setColor(Color.darkGray);
         offgraphics.drawString(lbl, x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2);
     }
 
