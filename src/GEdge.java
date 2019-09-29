@@ -14,11 +14,9 @@ class GEdge {
     }
 
     void relax() {
-        double vx = to.x - from.x;
-        double vy = to.y - from.y;
-        double len = sqrt(vx * vx + vy * vy);
-        len = (len == 0) ? .0001 : len;
-        double f = (this.len - len) / (len * 3);
+        double vx = vx();
+        double vy = vy();
+        double f = f();
         double dx = f * vx;
         double dy = f * vy;
 
@@ -27,6 +25,17 @@ class GEdge {
         from.dx += -dx;
         from.dy += -dy;
     }
+
+    private double f() {
+        double vx = vx();
+        double vy = vy();
+        double len = sqrt(vx * vx + vy * vy);
+        len = (len == 0) ? .0001 : len;
+        return (this.len - len) / (len * 3);
+    }
+
+    private double vx() { return to.x - from.x; }
+    private double vy() { return to.y - from.y; }
 
     int len() {
         int x1 = (int) from.x;
