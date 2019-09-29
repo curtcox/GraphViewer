@@ -26,9 +26,6 @@ public class Start {
                 "|to see this graph|specify no flags",
                 "|specify no flags|usage",
 
-                "|to see this graph|specify no flags",
-                "|specify no flags|usage",
-
                 "|to mark center|specify a string with no hyphen",
                 "|specify a string with no hyphen|usage",
 
