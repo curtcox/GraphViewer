@@ -1,5 +1,6 @@
 import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
+import static java.awt.geom.Line2D.linesIntersect;
 
 class GEdge {
 
@@ -11,6 +12,23 @@ class GEdge {
         this.from = from;
         this.to = to;
         this.len = len;
+    }
+
+    boolean crosses(GEdge that) {
+        double x1 = shorten(from.x,to.x);
+        double y1 = shorten(from.y,to.y);
+        double x2 = shorten(to.x,from.x);
+        double y2 = shorten(to.y,from.y);
+        double x3 = shorten(that.from.x,that.to.x);
+        double y3 = shorten(that.from.y,that.to.y);
+        double x4 = shorten(that.to.x,that.from.x);
+        double y4 = shorten(that.to.y,that.from.y);
+        return linesIntersect(x1,y1,x2,y2,x3,y3,x4,y4);
+    }
+
+    private static double shorten(double from, double to) {
+        double weight = 100;
+        return (weight * from + to) / (weight + 1.0d);
     }
 
     void relax() {
@@ -47,6 +65,7 @@ class GEdge {
 
 
     public String toString() {
-        return from + " / " + to + " / " + len;
+        return from.label + " / " + to.label;
     }
+
 }

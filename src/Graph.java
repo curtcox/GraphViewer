@@ -17,7 +17,17 @@ class Graph {
     GNode[] nodes() { return nodes; }
     int nodeCount() { return nodes.length; }
     int edgeCount() { return edges.length; }
-    int crossingCount() { return 0; }
+    int crossingCount() {
+        int count = 0;
+        for (GEdge e1 : edges) {
+            for (GEdge e2 : edges) {
+                if (e1 != e2 && e1.crosses(e2)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
 
     void relax() {
         relaxEdges();
