@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -6,7 +7,6 @@ class GraphPanel extends Panel {
     Graph graph;
     boolean stress;
     boolean relax;
-    private Thread relaxer;
     private int numMouseButtonsDown;
     private GNode pick;
     private boolean pickfixed;
@@ -72,7 +72,7 @@ class GraphPanel extends Panel {
         addMouseMotionListener(new GraphMouseMotionListener());
     }
 
-    synchronized void relax() {
+    void relax() {
         graph.relax();
     }
 
@@ -85,14 +85,13 @@ class GraphPanel extends Panel {
     }
 
     @Override
-    public synchronized void update(Graphics g) {
+    public void update(Graphics g) {
         painter.update(g,pick,stress);
     }
 
     public void start() {
         painter = new GraphPainter(graph,this);
-        relaxer = new RelaxerThread(this);
-        relaxer.start();
+        new Timer(25, evt -> advance()).start();
     }
 
     void advance() {
