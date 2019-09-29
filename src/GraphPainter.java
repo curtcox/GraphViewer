@@ -66,13 +66,13 @@ class GraphPainter {
 
     private void drawNodes() {
         FontMetrics fm = offgraphics.getFontMetrics();
-        for (GNode n : graph.nodes) {
+        for (GNode n : graph.nodes()) {
             paintNode(offgraphics, n, fm);
         }
     }
 
     private void drawEdges() {
-        for (GEdge e : graph.edges) {
+        for (GEdge e : graph.edges()) {
             drawEdge(e);
         }
     }

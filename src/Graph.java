@@ -3,15 +3,18 @@ import java.util.*;
 
 class Graph {
 
-    final GEdge[] edges;
-    final GNode[] nodes;
-    final Dimension size;
+    private final GEdge[] edges;
+    private final GNode[] nodes;
+    private final Dimension size;
 
     Graph(GEdge[] edges, GNode[] nodes, Dimension size) {
         this.edges = edges;
         this.nodes = nodes;
         this.size = size;
     }
+
+    GEdge[] edges() { return edges; }
+    GNode[] nodes() { return nodes; }
 
     void relax() {
         relaxEdges();
