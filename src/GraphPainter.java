@@ -13,8 +13,8 @@ class GraphPainter {
     }
 
     private Image offscreen;
-    private Dimension offscreensize;
-    private Graphics offgraphics;
+    private Dimension offscreenSize;
+    private Graphics offGraphics;
 
     private void paintNode(Graphics g, GNode n, FontMetrics fm) {
         int cx = (int) n.x;
@@ -49,25 +49,45 @@ class GraphPainter {
     }
 
     private void updateOffscreenGraphics() {
-        Dimension d = panel.getSize();
-        if ((offscreen == null) || (d.width != offscreensize.width) || (d.height != offscreensize.height)) {
-            offscreen = panel.createImage(d.width, d.height);
-            offscreensize = d;
-            if (offgraphics != null) {
-                offgraphics.dispose();
-            }
-            offgraphics = offscreen.getGraphics();
-            offgraphics.setFont(panel.getFont());
+        if (!offscreenGraphicsReady()) {
+            createOffscreenGraphics();
         }
 
-        offgraphics.setColor(panel.getBackground());
-        offgraphics.fillRect(0, 0, d.width, d.height);
+        fillBackground();
+    }
+
+    private void fillBackground() {
+        offGraphics.setColor(panel.getBackground());
+        Dimension d = size();
+        offGraphics.fillRect(0, 0, d.width, d.height);
+    }
+
+    private Dimension size() {
+        return panel.getSize();
+    }
+
+    private boolean offscreenGraphicsReady() {
+        Dimension d = size();
+        return offscreen != null &&
+            d.width  == offscreenSize.width &&
+            d.height == offscreenSize.height;
+    }
+
+    private void createOffscreenGraphics() {
+        Dimension d = size();
+        offscreen = panel.createImage(d.width, d.height);
+        offscreenSize = d;
+        if (offGraphics != null) {
+            offGraphics.dispose();
+        }
+        offGraphics = offscreen.getGraphics();
+        offGraphics.setFont(panel.getFont());
     }
 
     private void drawNodes() {
-        FontMetrics fm = offgraphics.getFontMetrics();
+        FontMetrics fm = offGraphics.getFontMetrics();
         for (GNode n : graph.nodes()) {
-            paintNode(offgraphics, n, fm);
+            paintNode(offGraphics, n, fm);
         }
     }
 
@@ -90,16 +110,16 @@ class GraphPainter {
     }
 
     private void drawEdgeLine(int x1, int y1, int x2, int y2, int len) {
-        offgraphics.setColor((len < 10)
+        offGraphics.setColor((len < 10)
                 ? Color.black
                 : (len < 20 ? Color.pink : Color.red));
-        offgraphics.drawLine(x1, y1, x2, y2);
+        offGraphics.drawLine(x1, y1, x2, y2);
     }
 
     private void labelEdgeStress(int x1, int y1, int x2, int y2, int len) {
         String lbl = String.valueOf(len);
-        offgraphics.setColor(Color.darkGray);
-        offgraphics.drawString(lbl, x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2);
+        offGraphics.setColor(Color.darkGray);
+        offGraphics.drawString(lbl, x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2);
     }
 
 }
