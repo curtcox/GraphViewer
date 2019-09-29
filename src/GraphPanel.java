@@ -7,6 +7,7 @@ class GraphPanel extends Panel {
     Graph graph;
     boolean stress;
     boolean relax;
+    boolean xray;
     private int numMouseButtonsDown;
     private GNode pick;
     private boolean pickfixed;
@@ -86,7 +87,7 @@ class GraphPanel extends Panel {
 
     @Override
     public void update(Graphics g) {
-        painter.update(g,pick,stress);
+        painter.update(g,pick,stress,xray);
     }
 
     public void start() {

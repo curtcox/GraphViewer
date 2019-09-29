@@ -4,7 +4,6 @@ import java.util.List;
 
 class GraphPainter {
 
-    private boolean stress;
     private GNode pick;
     private int overlapCount;
     private final Graph graph;
@@ -19,8 +18,7 @@ class GraphPainter {
     private Dimension offscreenSize;
     private Graphics offGraphics;
 
-    private Rectangle paintNode(GNode n) {
-        setColor(offGraphics,n);
+    private Rectangle paintNode(GNode n,boolean xray) {
         FontMetrics fm = getFontMetrics();
         int w = fm.stringWidth(n.label);
         int h = fm.getHeight();
@@ -30,7 +28,10 @@ class GraphPainter {
         int cy = (int) n.y;
         int x = cx - pw / 2;
         int y = cy - ph / 2;
-        offGraphics.fillRect(x, y, pw, ph);
+        if (!xray) {
+            setColor(offGraphics,n);
+            offGraphics.fillRect(x, y, pw, ph);
+        }
         offGraphics.setColor(Color.black);
         offGraphics.drawRect(x, y, pw, ph);
         offGraphics.drawString(n.label, cx - w / 2, (cy - h / 2) + fm.getAscent());
@@ -64,13 +65,12 @@ class GraphPainter {
         g.setColor((n == pick) ? selectColor : (n.fixed ? fixedColor : nodeColor));
     }
 
-    void update(Graphics g,GNode pick,boolean stress) {
+    void update(Graphics g,GNode pick,boolean stress,boolean xray) {
         this.pick = pick;
-        this.stress = stress;
         overlapCount = 0;
         updateOffscreenGraphics();
-        drawEdges();
-        drawNodes();
+        drawEdges(stress);
+        drawNodes(xray);
         drawStats();
         g.drawImage(offscreen, 0, 0, null);
     }
@@ -111,10 +111,10 @@ class GraphPainter {
         offGraphics.setFont(panel.getFont());
     }
 
-    private void drawNodes() {
+    private void drawNodes(boolean xray) {
         List<Rectangle> rects = new ArrayList();
         for (GNode n : graph.nodes()) {
-            rects.add(paintNode(n));
+            rects.add(paintNode(n,xray));
         }
         overlapCount = countOverlaps(rects);
     }
@@ -131,13 +131,13 @@ class GraphPainter {
         return count;
     }
 
-    private void drawEdges() {
+    private void drawEdges(boolean stress) {
         for (GEdge e : graph.edges()) {
-            drawEdge(e);
+            drawEdge(e,stress);
         }
     }
 
-    private void drawEdge(GEdge e) {
+    private void drawEdge(GEdge e, boolean stress) {
         int x1 = (int) e.from.x;
         int y1 = (int) e.from.y;
         int x2 = (int) e.to.x;
