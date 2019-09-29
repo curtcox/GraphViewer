@@ -15,6 +15,9 @@ class Graph {
 
     GEdge[] edges() { return edges; }
     GNode[] nodes() { return nodes; }
+    int nodeCount() { return nodes.length; }
+    int edgeCount() { return edges.length; }
+    int crossingCount() { return 0; }
 
     void relax() {
         relaxEdges();

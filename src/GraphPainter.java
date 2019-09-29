@@ -1,9 +1,12 @@
 import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 class GraphPainter {
 
     private boolean stress;
     private GNode pick;
+    private int overlapCount;
     private final Graph graph;
     private final GraphPanel panel;
 
@@ -16,7 +19,7 @@ class GraphPainter {
     private Dimension offscreenSize;
     private Graphics offGraphics;
 
-    private void paintNode(GNode n) {
+    private Rectangle paintNode(GNode n) {
         setColor(offGraphics,n);
         FontMetrics fm = getFontMetrics();
         int w = fm.stringWidth(n.label);
@@ -31,6 +34,7 @@ class GraphPainter {
         offGraphics.setColor(Color.black);
         offGraphics.drawRect(x, y, pw, ph);
         offGraphics.drawString(n.label, cx - w / 2, (cy - h / 2) + fm.getAscent());
+        return new Rectangle(x,y,pw,ph);
     }
 
     private FontMetrics getFontMetrics() {
@@ -38,12 +42,19 @@ class GraphPainter {
     }
 
     private void drawStats() {
-        String s = graph.nodes().length + " / " + graph.edges().length;
+        String s = stats();
         FontMetrics fm = getFontMetrics();
         Dimension d = size();
         int x = d.width  - fm.stringWidth(s);
         int y = d.height - fm.getHeight();
         offGraphics.drawString(s, x, y);
+    }
+
+    private String stats() {
+        return graph.nodeCount()  + " / " +
+            graph.edgeCount()     + " / " +
+            graph.crossingCount() + " / " +
+            overlapCount;
     }
 
     private static final Color nodeColor = new Color(250, 220, 100);
@@ -56,6 +67,7 @@ class GraphPainter {
     void update(Graphics g,GNode pick,boolean stress) {
         this.pick = pick;
         this.stress = stress;
+        overlapCount = 0;
         updateOffscreenGraphics();
         drawEdges();
         drawNodes();
@@ -100,9 +112,23 @@ class GraphPainter {
     }
 
     private void drawNodes() {
+        List<Rectangle> rects = new ArrayList();
         for (GNode n : graph.nodes()) {
-            paintNode(n);
+            rects.add(paintNode(n));
         }
+        overlapCount = countOverlaps(rects);
+    }
+
+    private int countOverlaps(List<Rectangle> rects) {
+        int count = 0;
+        for (Rectangle r1 : rects) {
+            for (Rectangle r2 : rects) {
+                if (r1 != r2 && r1.intersects(r2)) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     private void drawEdges() {
