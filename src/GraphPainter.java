@@ -16,20 +16,34 @@ class GraphPainter {
     private Dimension offscreenSize;
     private Graphics offGraphics;
 
-    private void paintNode(Graphics g, GNode n, FontMetrics fm) {
-        int cx = (int) n.x;
-        int cy = (int) n.y;
-        setColor(g,n);
+    private void paintNode(GNode n) {
+        setColor(offGraphics,n);
+        FontMetrics fm = getFontMetrics();
         int w = fm.stringWidth(n.label);
         int h = fm.getHeight();
         int pw = w + 10;
         int ph = h + 4;
+        int cx = (int) n.x;
+        int cy = (int) n.y;
         int x = cx - pw / 2;
         int y = cy - ph / 2;
-        g.fillRect(x, y, pw, ph);
-        g.setColor(Color.black);
-        g.drawRect(x, y, pw, ph);
-        g.drawString(n.label, cx - w / 2, (cy - h / 2) + fm.getAscent());
+        offGraphics.fillRect(x, y, pw, ph);
+        offGraphics.setColor(Color.black);
+        offGraphics.drawRect(x, y, pw, ph);
+        offGraphics.drawString(n.label, cx - w / 2, (cy - h / 2) + fm.getAscent());
+    }
+
+    private FontMetrics getFontMetrics() {
+        return offGraphics.getFontMetrics();
+    }
+
+    private void drawStats() {
+        String s = graph.nodes().length + " / " + graph.edges().length;
+        FontMetrics fm = getFontMetrics();
+        Dimension d = size();
+        int x = d.width  - fm.stringWidth(s);
+        int y = d.height - fm.getHeight();
+        offGraphics.drawString(s, x, y);
     }
 
     private static final Color nodeColor = new Color(250, 220, 100);
@@ -45,6 +59,7 @@ class GraphPainter {
         updateOffscreenGraphics();
         drawEdges();
         drawNodes();
+        drawStats();
         g.drawImage(offscreen, 0, 0, null);
     }
 
@@ -85,9 +100,8 @@ class GraphPainter {
     }
 
     private void drawNodes() {
-        FontMetrics fm = offGraphics.getFontMetrics();
         for (GNode n : graph.nodes()) {
-            paintNode(offGraphics, n, fm);
+            paintNode(n);
         }
     }
 
