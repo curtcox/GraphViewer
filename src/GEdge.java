@@ -6,12 +6,12 @@ class GEdge {
 
     final GNode from;
     final GNode to;
-    final double len;
+    final double desiredLength;
 
-    GEdge(GNode from, GNode to, double len) {
+    GEdge(GNode from, GNode to, double desiredLength) {
         this.from = from;
         this.to = to;
-        this.len = len;
+        this.desiredLength = desiredLength;
     }
 
     boolean crosses(GEdge that) {
@@ -32,11 +32,9 @@ class GEdge {
     }
 
     void relax() {
-        double vx = vx();
-        double vy = vy();
         double f = f();
-        double dx = f * vx;
-        double dy = f * vy;
+        double dx = f * dx();
+        double dy = f * dy();
 
         to.dx += dx;
         to.dy += dy;
@@ -45,24 +43,23 @@ class GEdge {
     }
 
     private double f() {
-        double vx = vx();
-        double vy = vy();
-        double len = sqrt(vx * vx + vy * vy);
-        len = (len == 0) ? .0001 : len;
-        return (this.len - len) / (len * 3);
+        double actualLength = actualLength();
+        return (this.desiredLength - actualLength) / (actualLength * 3);
     }
 
-    private double vx() { return to.x - from.x; }
-    private double vy() { return to.y - from.y; }
+    private double dx() { return to.x - from.x; }
+    private double dy() { return to.y - from.y; }
+
+    private double actualLength() {
+        double dx = dx();
+        double dy = dy();
+        double actualLength = sqrt(dx * dx + dy * dy);
+        return (actualLength == 0) ? .0001 : actualLength;
+    }
 
     int len() {
-        int x1 = (int) from.x;
-        int y1 = (int) from.y;
-        int x2 = (int) to.x;
-        int y2 = (int) to.y;
-        return (int) abs(sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) - len);
+        return (int) abs(actualLength() - desiredLength);
     }
-
 
     public String toString() {
         return from.label + " / " + to.label;
