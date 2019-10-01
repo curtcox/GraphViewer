@@ -36,6 +36,32 @@ class GNode {
         dy /= 2;
     }
 
+    void relax(GNode[] nodes) {
+        double dx = 0;
+        double dy = 0;
+
+        for (GNode n2 : nodes) {
+            if (this == n2) {
+                continue;
+            }
+            double vx = x - n2.x;
+            double vy = y - n2.y;
+            double len = vx * vx + vy * vy;
+            if (len == 0) {
+                dx += random();
+                dy += random();
+            } else if (len < 100 * 100) {
+                dx += vx / len;
+                dy += vy / len;
+            }
+        }
+        double dlen = dx * dx + dy * dy;
+        if (dlen > 0) {
+            dlen = sqrt(dlen) / 2;
+            addDelta(dx / dlen,dy / dlen);
+        }
+    }
+
     private static double boundBy(double v, double max) {
         if (v < 0) {
             v = 0;
@@ -47,29 +73,7 @@ class GNode {
 
     static void relaxNodes(GNode[] nodes) {
         for (GNode n1 : nodes) {
-            double dx = 0;
-            double dy = 0;
-
-            for (GNode n2 : nodes) {
-                if (n1 == n2) {
-                    continue;
-                }
-                double vx = n1.x - n2.x;
-                double vy = n1.y - n2.y;
-                double len = vx * vx + vy * vy;
-                if (len == 0) {
-                    dx += random();
-                    dy += random();
-                } else if (len < 100 * 100) {
-                    dx += vx / len;
-                    dy += vy / len;
-                }
-            }
-            double dlen = dx * dx + dy * dy;
-            if (dlen > 0) {
-                dlen = sqrt(dlen) / 2;
-                n1.addDelta(dx / dlen,dy / dlen);
-            }
+            n1.relax(nodes);
         }
     }
 
