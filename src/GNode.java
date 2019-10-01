@@ -27,13 +27,26 @@ class GNode {
 
     void relax(Dimension d) {
         if (!fixed) {
-            x += max(-5, min(5, dx));
-            y += max(-5, min(5, dy));
+            x += bounded(dx);
+            y += bounded(dy);
         }
         x = boundBy(x,d.width);
         y = boundBy(y,d.height);
         dx /= 2;
         dy /= 2;
+    }
+
+    private static double bounded(double v) {
+        return max(-5, min(5,v));
+    }
+
+    private static double boundBy(double v, double max) {
+        if (v < 0) {
+            v = 0;
+        } else if (v > max) {
+            v = max;
+        }
+        return v;
     }
 
     void relax(GNode[] nodes) {
@@ -60,15 +73,6 @@ class GNode {
             dlen = sqrt(dlen) / 2;
             addDelta(dx / dlen,dy / dlen);
         }
-    }
-
-    private static double boundBy(double v, double max) {
-        if (v < 0) {
-            v = 0;
-        } else if (v > max) {
-            v = max;
-        }
-        return v;
     }
 
     static void relaxNodes(GNode[] nodes) {
