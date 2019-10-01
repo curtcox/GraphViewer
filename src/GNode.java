@@ -16,7 +16,7 @@ class GNode {
 
     double x() { return x; }
     double y() { return y; }
-    public void setXY(double x, double y) {
+    void setXY(double x, double y) {
         this.x = x;
         this.y = y;
     }
@@ -68,8 +68,7 @@ class GNode {
             double dlen = dx * dx + dy * dy;
             if (dlen > 0) {
                 dlen = sqrt(dlen) / 2;
-                n1.dx += dx / dlen;
-                n1.dy += dy / dlen;
+                n1.addDelta(dx / dlen,dy / dlen);
             }
         }
     }
