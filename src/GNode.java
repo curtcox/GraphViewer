@@ -49,7 +49,7 @@ class GNode {
         return v;
     }
 
-    void relax(GNode[] nodes) {
+    private void adjustDeltasConsidering(GNode[] nodes) {
         double dx = 0;
         double dy = 0;
 
@@ -76,8 +76,8 @@ class GNode {
     }
 
     static void relaxNodes(GNode[] nodes) {
-        for (GNode n1 : nodes) {
-            n1.relax(nodes);
+        for (GNode node : nodes) {
+            node.adjustDeltasConsidering(nodes);
         }
     }
 
