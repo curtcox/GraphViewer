@@ -15,18 +15,18 @@ class GEdge {
     }
 
     boolean crosses(GEdge that) {
-        double x1 = shorten(from.x,to.x);
-        double y1 = shorten(from.y,to.y);
-        double x2 = shorten(to.x,from.x);
-        double y2 = shorten(to.y,from.y);
-        double x3 = shorten(that.from.x,that.to.x);
-        double y3 = shorten(that.from.y,that.to.y);
-        double x4 = shorten(that.to.x,that.from.x);
-        double y4 = shorten(that.to.y,that.from.y);
+        double x1 = betweenFirstAndSecondButMostlyFirst(from.x(),to.x());
+        double y1 = betweenFirstAndSecondButMostlyFirst(from.y(),to.y());
+        double x2 = betweenFirstAndSecondButMostlyFirst(to.x(),from.x());
+        double y2 = betweenFirstAndSecondButMostlyFirst(to.y(),from.y());
+        double x3 = betweenFirstAndSecondButMostlyFirst(that.from.x(),that.to.x());
+        double y3 = betweenFirstAndSecondButMostlyFirst(that.from.y(),that.to.y());
+        double x4 = betweenFirstAndSecondButMostlyFirst(that.to.x(),that.from.x());
+        double y4 = betweenFirstAndSecondButMostlyFirst(that.to.y(),that.from.y());
         return linesIntersect(x1,y1,x2,y2,x3,y3,x4,y4);
     }
 
-    private static double shorten(double from, double to) {
+    private static double betweenFirstAndSecondButMostlyFirst(double from, double to) {
         double weight = 100;
         return (weight * from + to) / (weight + 1.0d);
     }
@@ -36,10 +36,8 @@ class GEdge {
         double dx = f * dx();
         double dy = f * dy();
 
-        to.dx += dx;
-        to.dy += dy;
-        from.dx += -dx;
-        from.dy += -dy;
+        to.addDelta(dx,dy);
+        from.addDelta(-dx,-dy);
     }
 
     private double f() {
@@ -47,8 +45,8 @@ class GEdge {
         return (this.desiredLength - actualLength) / (actualLength * 3);
     }
 
-    private double dx() { return to.x - from.x; }
-    private double dy() { return to.y - from.y; }
+    private double dx() { return to.x() - from.x(); }
+    private double dy() { return to.y() - from.y(); }
 
     private double actualLength() {
         double dx = dx();

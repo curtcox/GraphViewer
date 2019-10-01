@@ -3,15 +3,26 @@ import java.awt.*;
 import static java.lang.Math.*;
 
 class GNode {
-    double x;
-    double y;
-    double dx;
-    double dy;
+    private double x;
+    private double y;
+    private double dx;
+    private double dy;
     boolean fixed;
     final String label;
 
     GNode(String label) {
         this.label = label;
+    }
+
+    double x() { return x; }
+    double y() { return y; }
+    public void setXY(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+    void addDelta(double dx, double dy) {
+        this.dx += dx;
+        this.dy += dy;
     }
 
     void relax(Dimension d) {
@@ -96,4 +107,5 @@ class GNode {
     public String toString() {
         return label + " @ " + x + "," + y;
     }
+
 }

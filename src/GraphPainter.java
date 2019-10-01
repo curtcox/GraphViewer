@@ -24,8 +24,8 @@ class GraphPainter {
         int h = fm.getHeight();
         int pw = w + 10;
         int ph = h + 4;
-        int cx = (int) n.x;
-        int cy = (int) n.y;
+        int cx = (int) n.x();
+        int cy = (int) n.y();
         int x = cx - pw / 2;
         int y = cy - ph / 2;
         if (!xray) {
@@ -138,10 +138,10 @@ class GraphPainter {
     }
 
     private void drawEdge(GEdge e, boolean stress) {
-        int x1 = (int) e.from.x;
-        int y1 = (int) e.from.y;
-        int x2 = (int) e.to.x;
-        int y2 = (int) e.to.y;
+        int x1 = (int) e.from.x();
+        int y1 = (int) e.from.y();
+        int x2 = (int) e.to.x();
+        int y2 = (int) e.to.y();
         int len = e.len();
         drawEdgeLine(x1,y1,x2,y2,len);
         if (stress) {

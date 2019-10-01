@@ -35,8 +35,7 @@ class GraphPanel extends Panel {
             pick = node;
             pickfixed = pick.fixed;
             pick.fixed = true;
-            pick.x = x;
-            pick.y = y;
+            pick.setXY(x,y);
         }
 
         @Override
@@ -44,8 +43,7 @@ class GraphPanel extends Panel {
             numMouseButtonsDown--;
 
             pick.fixed = pickfixed;
-            pick.x = e.getX();
-            pick.y = e.getY();
+            pick.setXY(e.getX(),e.getY());
             if (numMouseButtonsDown == 0) {
                 pick = null;
             }
@@ -61,8 +59,7 @@ class GraphPanel extends Panel {
     class GraphMouseMotionListener extends MouseAdapter {
         @Override
         public void mouseDragged(MouseEvent e) {
-            pick.x = e.getX();
-            pick.y = e.getY();
+            pick.setXY(e.getX(),e.getY());
             repaint();
             e.consume();
         }
