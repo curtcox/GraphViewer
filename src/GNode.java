@@ -38,8 +38,7 @@ class GNode {
     }
 
     private void adjustDeltasConsidering(GNode[] nodes) {
-        double dx = 0;
-        double dy = 0;
+        XY delta = new XY();
 
         for (GNode n2 : nodes) {
             if (this == n2) {
@@ -49,17 +48,16 @@ class GNode {
             double vy = y() - n2.y();
             double len = vx * vx + vy * vy;
             if (len == 0) {
-                dx += random();
-                dy += random();
+                delta.add(new XY(random(),random()));
             } else if (len < 100 * 100) {
-                dx += vx / len;
-                dy += vy / len;
+                delta.add(new XY(vx / len, vy / len));
             }
         }
-        double dlen = dx * dx + dy * dy;
+        double dlen = delta.dlen();
         if (dlen > 0) {
             dlen = sqrt(dlen) / 2;
-            delta.add(new XY(dx / dlen,dy / dlen));
+            delta.divideBy(dlen);
+            delta.add(delta);
         }
     }
 

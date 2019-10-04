@@ -26,7 +26,15 @@ class XY {
     }
 
     void half() {
-        x /= 2;
-        y /= 2;
+        divideBy(2);
+    }
+
+    void divideBy(double v) {
+        x /= v;
+        y /= v;
+    }
+
+    double dlen() {
+        return x * x + y * y;
     }
 }
