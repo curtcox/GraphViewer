@@ -3,8 +3,7 @@ import java.awt.*;
 import static java.lang.Math.*;
 
 class GNode {
-    private double x;
-    private double y;
+    private XY xy;
     private double dx;
     private double dy;
     boolean fixed;
@@ -14,12 +13,10 @@ class GNode {
         this.label = label;
     }
 
-    double x() { return x; }
-    double y() { return y; }
-    void setXY(double x, double y) {
-        this.x = x;
-        this.y = y;
-    }
+    XY xy() { return xy; }
+    double x() { return xy.x; }
+    double y() { return xy.y; }
+    void setXY(double x, double y) { this.xy = new XY(x,y); }
     void addDelta(double dx, double dy) {
         this.dx += dx;
         this.dy += dy;
@@ -27,11 +24,9 @@ class GNode {
 
     void relax(Dimension d) {
         if (!fixed) {
-            x += bounded(dx);
-            y += bounded(dy);
+            xy.add(new XY(bounded(dx),bounded(dy)));
         }
-        x = boundBy(x,d.width);
-        y = boundBy(y,d.height);
+        setXY(boundBy(x(),d.width),boundBy(y(),d.height));
         dx /= 2;
         dy /= 2;
     }
@@ -57,8 +52,8 @@ class GNode {
             if (this == n2) {
                 continue;
             }
-            double vx = x - n2.x;
-            double vy = y - n2.y;
+            double vx = x() - n2.x();
+            double vy = y() - n2.y();
             double len = vx * vx + vy * vy;
             if (len == 0) {
                 dx += random();
@@ -83,15 +78,13 @@ class GNode {
 
     private void scramble(Dimension d) {
         if (!fixed) {
-            x = 10 + (d.width - 20)  * random();
-            y = 10 + (d.height - 20) * random();
+            setXY(10 + (d.width - 20)  * random(),10 + (d.height - 20) * random());
         }
     }
 
     private void shake() {
         if (!fixed) {
-            x += 80 * random() - 40;
-            y += 80 * random() - 40;
+            xy.add(new XY(80 * random() - 40,80 * random() - 40));
         }
     }
 
@@ -108,11 +101,11 @@ class GNode {
     }
 
     double distanceTo(int x, int y) {
-        return (this.x - x) * (this.x - x) + (this.y - y) * (this.y - y);
+        return (this.x() - x) * (this.x() - x) + (this.y() - y) * (this.y() - y);
     }
 
     public String toString() {
-        return label + " @ " + x + "," + y;
+        return label + " @ " + xy;
     }
 
 }
