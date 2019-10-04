@@ -3,6 +3,8 @@ class XY {
     double x;
     double y;
 
+    XY(){}
+    
     XY(double x, double y) {
         this.x = x;
         this.y = y;
@@ -18,4 +20,8 @@ class XY {
         return x + "," + y;
     }
 
+    void half() {
+        x /= 2;
+        y /= 2;
+    }
 }

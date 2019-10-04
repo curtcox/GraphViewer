@@ -4,8 +4,7 @@ import static java.lang.Math.*;
 
 class GNode {
     private XY xy;
-    private double dx;
-    private double dy;
+    private XY delta = new XY();
     boolean fixed;
     final String label;
 
@@ -13,22 +12,19 @@ class GNode {
         this.label = label;
     }
 
-    XY xy() { return xy; }
     double x() { return xy.x; }
     double y() { return xy.y; }
     void setXY(double x, double y) { this.xy = new XY(x,y); }
     void addDelta(double dx, double dy) {
-        this.dx += dx;
-        this.dy += dy;
+        this.delta.add(new XY(dx,dy));
     }
 
     void relax(Dimension d) {
         if (!fixed) {
-            xy.add(new XY(bounded(dx),bounded(dy)));
+            xy.add(new XY(bounded(delta.x),bounded(delta.y)));
         }
         setXY(boundBy(x(),d.width),boundBy(y(),d.height));
-        dx /= 2;
-        dy /= 2;
+        delta.half();
     }
 
     private static double bounded(double v) {
