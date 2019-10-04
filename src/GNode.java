@@ -44,13 +44,13 @@ class GNode {
             if (this == n2) {
                 continue;
             }
-            double vx = x() - n2.x();
-            double vy = y() - n2.y();
-            double len = vx * vx + vy * vy;
+            XY vector = vectorTo(n2);
+            double len = vector.dlen();
             if (len == 0) {
                 delta.add(new XY(random(),random()));
             } else if (len < 100 * 100) {
-                delta.add(new XY(vx / len, vy / len));
+                vector.divideBy(len);
+                delta.add(vector);
             }
         }
         double dlen = delta.dlen();
@@ -59,6 +59,10 @@ class GNode {
             delta.divideBy(dlen);
             delta.add(delta);
         }
+    }
+
+    XY vectorTo(GNode other) {
+        return new XY(x() - other.x(),y() - other.y());
     }
 
     static void relaxNodes(GNode[] nodes) {
