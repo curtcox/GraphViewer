@@ -38,6 +38,16 @@ class GNode {
     }
 
     private void adjustDeltasConsidering(GNode[] nodes) {
+        XY delta = computeDelta(nodes);
+        double dlen = delta.dlen();
+        if (dlen > 0) {
+            dlen = sqrt(dlen) / 2;
+            delta.divideBy(dlen);
+            delta.add(delta);
+        }
+    }
+
+    XY computeDelta(GNode[] nodes) {
         XY delta = new XY();
 
         for (GNode n2 : nodes) {
@@ -53,12 +63,8 @@ class GNode {
                 delta.add(vector);
             }
         }
-        double dlen = delta.dlen();
-        if (dlen > 0) {
-            dlen = sqrt(dlen) / 2;
-            delta.divideBy(dlen);
-            delta.add(delta);
-        }
+
+        return delta;
     }
 
     XY vectorTo(GNode other) {
