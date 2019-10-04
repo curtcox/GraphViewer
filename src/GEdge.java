@@ -33,11 +33,10 @@ class GEdge {
 
     void relax() {
         double f = f();
-        double dx = f * dx();
-        double dy = f * dy();
+        XY delta = new XY(f * dx(), f * dy());
 
-        to.addDelta(dx,dy);
-        from.addDelta(-dx,-dy);
+        to.delta.add(delta);
+        from.delta.subtract(delta);
     }
 
     private double f() {

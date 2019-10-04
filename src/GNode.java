@@ -3,8 +3,8 @@ import java.awt.*;
 import static java.lang.Math.*;
 
 class GNode {
-    private XY xy;
-    private XY delta = new XY();
+    XY xy;
+    XY delta = new XY();
     boolean fixed;
     final String label;
 
@@ -15,9 +15,6 @@ class GNode {
     double x() { return xy.x; }
     double y() { return xy.y; }
     void setXY(double x, double y) { this.xy = new XY(x,y); }
-    void addDelta(double dx, double dy) {
-        this.delta.add(new XY(dx,dy));
-    }
 
     void relax(Dimension d) {
         if (!fixed) {
@@ -62,7 +59,7 @@ class GNode {
         double dlen = dx * dx + dy * dy;
         if (dlen > 0) {
             dlen = sqrt(dlen) / 2;
-            addDelta(dx / dlen,dy / dlen);
+            delta.add(new XY(dx / dlen,dy / dlen));
         }
     }
 
