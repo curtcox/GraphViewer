@@ -16,14 +16,14 @@ class GNode {
     double y() { return xy.y; }
     void setXY(double x, double y) { this.xy = new XY(x,y); }
 
-    void relax(Dimension d) {
+    void moveRestrictedTo(Dimension d) {
         if (!fixed) {
-            contract();
+            move();
         }
         restrictTo(d);
     }
 
-    private void contract() {
+    private void move() {
         xy = xy.plus(new XY(bounded(delta.x),bounded(delta.y)));
         delta = delta.half();
     }
@@ -69,9 +69,27 @@ class GNode {
         }
     }
 
-    double distanceTo(int x, int y) {
-        return (this.x() - x) * (this.x() - x) + (this.y() - y) * (this.y() - y);
+    double distanceTo(XY xy) {
+        double dx = this.x() - xy.x;
+        double dy = this.y() - xy.y;
+        return  dx * dx + dy * dy;
     }
+
+    static void repelOtherNodes(GNode[] nodes) {
+        for (GNode n1 : nodes) {
+            for (GNode n2 : nodes) {
+                if (n1!=n2) {
+                    repelNodes(n1,n2);
+                }
+            }
+        }
+    }
+
+    private static void repelNodes(GNode n1, GNode n2) {
+        GEdge edge = new GEdge(n1,n2,1.0);
+        edge.repel();
+    }
+
 
     public String toString() {
         return label + " @ " + xy;

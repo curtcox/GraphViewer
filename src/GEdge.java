@@ -31,20 +31,38 @@ class GEdge {
         return (weight * from + to) / (weight + 1.0d);
     }
 
-    void relax() {
+    void contract() {
         XY delta   = delta();
         to.delta   = to.delta.plus(delta);
         from.delta = from.delta.minus(delta);
     }
 
+    void repel() {
+        XY delta   = repelDelta();
+        to.delta   = to.delta.plus(delta);
+        from.delta = from.delta.minus(delta);
+    }
+
     private XY delta() {
-        double f = f();
-        return new XY(f * dx(), f * dy());
+        return direction().times(f());
+    }
+
+    private XY repelDelta() {
+        return direction().times(repelMultiplier());
+    }
+
+    private XY direction() {
+        return new XY(dx(),dy());
     }
 
     private double f() {
         double actualLength = actualLength();
         return (this.desiredLength - actualLength) / (actualLength * 3);
+    }
+
+    private double repelMultiplier() {
+        double actualLength = actualLength();
+        return actualLength == 0 ? 0 : 1.0 / actualLength;
     }
 
     private double dx() { return to.x() - from.x(); }

@@ -30,19 +30,20 @@ class Graph {
     }
 
     void relax() {
-        relaxEdges();
-        relaxNodes();
+        contractEdges();
+        GNode.repelOtherNodes(nodes);
+        moveNodes();
     }
 
-    private void relaxEdges() {
+    private void contractEdges() {
         for (GEdge e : edges) {
-            e.relax();
+            e.contract();
         }
     }
 
-    private void relaxNodes() {
+    private void moveNodes() {
         for (GNode n : nodes) {
-            n.relax(size);
+            n.moveRestrictedTo(size);
         }
     }
 
@@ -59,7 +60,7 @@ class Graph {
         GNode nearest = null;
 
         for (GNode n : nodes) {
-            double dist = n.distanceTo(x,y);
+            double dist = n.distanceTo(new XY(x,y));
             if (dist < bestdist) {
                 nearest = n;
                 bestdist = dist;

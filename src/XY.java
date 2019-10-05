@@ -20,6 +20,10 @@ class XY {
         return new XY(x - xy.x, y - xy.y);
     }
 
+    XY times(double v) {
+        return new XY(x * v, y * v);
+    }
+
     @Override
     public String toString() {
         return x + "," + y;
