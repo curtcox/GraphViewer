@@ -6,7 +6,7 @@ class GEdge {
 
     final GNode from;
     final GNode to;
-    final double desiredLength;
+    private final double desiredLength;
 
     GEdge(GNode from, GNode to, double desiredLength) {
         this.from = from;
@@ -35,8 +35,8 @@ class GEdge {
         double f = f();
         XY delta = new XY(f * dx(), f * dy());
 
-        to.delta.add(delta);
-        from.delta.subtract(delta);
+        to.delta = to.delta.add(delta);
+        from.delta = from.delta.subtract(delta);
     }
 
     private double f() {

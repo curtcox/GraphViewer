@@ -20,8 +20,7 @@ class GraphReader {
         this.d = d;
         addEdges();
         addCenter();
-        Graph graph = new Graph(edges,nodes,d);
-        return graph;
+        return new Graph(edges,nodes,d);
     }
 
     private GNode findNodeFromLabel(String lbl) {
@@ -88,7 +87,7 @@ class GraphReader {
 
     private void addEdge(String line) {
         String[] parts = partsOf(line);
-        int len = (parts.length == 3) ? Integer.valueOf(parts[2]).intValue() : 50;
+        int len = (parts.length == 3) ? Integer.valueOf(parts[2]) : 50;
         String from = parts[0];
         String   to = parts[1];
         addEdge(from, to, len);

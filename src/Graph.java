@@ -34,7 +34,7 @@ class Graph {
         relaxNodes();
     }
 
-    void relaxEdges() {
+    private void relaxEdges() {
         for (GEdge e : edges) {
             e.relax();
         }

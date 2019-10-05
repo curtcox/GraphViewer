@@ -3,7 +3,7 @@ import java.awt.*;
 import static java.lang.Math.*;
 
 class GNode {
-    XY xy;
+    private XY xy;
     XY delta = new XY();
     boolean fixed;
     final String label;
@@ -18,10 +18,10 @@ class GNode {
 
     void relax(Dimension d) {
         if (!fixed) {
-            xy.add(new XY(bounded(delta.x),bounded(delta.y)));
+            xy = xy.add(new XY(bounded(delta.x),bounded(delta.y)));
         }
         setXY(boundBy(x(),d.width),boundBy(y(),d.height));
-        delta.half();
+        delta = delta.half();
     }
 
     private static double bounded(double v) {
@@ -41,9 +41,9 @@ class GNode {
         XY delta = computeDelta(nodes);
         double dlen = delta.dlen();
         if (dlen > 0) {
-            dlen = sqrt(dlen) / 2;
-            delta.divideBy(dlen);
-            delta.add(delta);
+//            dlen = sqrt(dlen) / 2;
+            delta = delta.divideBy(dlen);
+            delta = delta.add(delta);
         }
     }
 
@@ -57,9 +57,14 @@ class GNode {
             XY vector = vectorTo(n2);
             double len = vector.dlen();
             if (len == 0) {
-                delta.add(new XY(random(),random()));
-            } else if (len < 100 * 100) {
-                vector.divideBy(len);
+                System.out.println("!!!!!");
+                //delta.add(new XY(random(),random()));
+            } else { // if (len < 100 * 100) {
+                //if (len > 1) {
+                    vector.divideBy(len);
+                //} else {
+                //    vector.multiplyBy(1.0/-len);
+                //}
                 delta.add(vector);
             }
         }
@@ -68,12 +73,12 @@ class GNode {
     }
 
     XY vectorTo(GNode other) {
-        return new XY(x() - other.x(),y() - other.y());
+        return xy.subtract(other.xy);
     }
 
     static void relaxNodes(GNode[] nodes) {
         for (GNode node : nodes) {
-            node.adjustDeltasConsidering(nodes);
+            //node.adjustDeltasConsidering(nodes);
         }
     }
 
@@ -85,7 +90,7 @@ class GNode {
 
     private void shake() {
         if (!fixed) {
-            xy.add(new XY(80 * random() - 40,80 * random() - 40));
+            xy = xy.add(new XY(80 * random() - 40,80 * random() - 40));
         }
     }
 

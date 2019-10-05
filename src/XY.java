@@ -1,23 +1,23 @@
 class XY {
 
-    double x;
-    double y;
+    final double x;
+    final double y;
 
-    XY(){}
+    XY(){
+        this(0,0);
+    }
 
     XY(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
-    void add(XY xy) {
-        this.x += xy.x;
-        this.y += xy.y;
+    XY add(XY xy) {
+        return new XY(x + xy.x, y + xy.y);
     }
 
-    void subtract(XY xy) {
-        this.x -= xy.x;
-        this.y -= xy.y;
+    XY subtract(XY xy) {
+        return new XY(x - xy.x, y - xy.y);
     }
 
     @Override
@@ -25,13 +25,16 @@ class XY {
         return x + "," + y;
     }
 
-    void half() {
-        divideBy(2);
+    XY half() {
+        return divideBy(2);
     }
 
-    void divideBy(double v) {
-        x /= v;
-        y /= v;
+    XY divideBy(double v) {
+        return new XY(x / v, y /v);
+    }
+
+    XY multiplyBy(double v) {
+        return new XY(x * v, y  * v);
     }
 
     double dlen() {
