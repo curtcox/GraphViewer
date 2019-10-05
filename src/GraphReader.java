@@ -87,7 +87,7 @@ class GraphReader {
 
     private void addEdge(String line) {
         String[] parts = partsOf(line);
-        int len = (parts.length == 3) ? Integer.valueOf(parts[2]) : 50;
+        int len = (parts.length == 3) ? Integer.parseInt(parts[2]) : 50;
         String from = parts[0];
         String   to = parts[1];
         addEdge(from, to, len);
@@ -96,7 +96,7 @@ class GraphReader {
     private void addCenter() {
         if (center != null) {
             GNode n = findNodeFromLabel(center);
-            n.setXY(d.width  / 2,d.height / 2);
+            n.setXY(d.width  / 2.0,d.height / 2.0);
             n.fixed = true;
         }
     }
