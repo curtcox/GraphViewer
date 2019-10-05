@@ -5,38 +5,62 @@ import java.util.List;
 class GraphPainter {
 
     private GNode pick;
-    private int overlapCount;
     private final Graph graph;
     private final GraphPanel panel;
     private final FontMetrics fm;
+    private final int nodeHeight;
+    private final int nodeAscent;
+    private final int paddedHeight;
 
     GraphPainter(Graph graph, GraphPanel panel) {
         this.graph = graph;
         this.panel = panel;
         this.fm = getFontMetrics();
+        this.nodeHeight = fm.getHeight();
+        this.nodeAscent = fm.getAscent();
+        this.paddedHeight = nodeHeight + 4;
     }
 
     private Image offscreen;
     private Dimension offscreenSize;
     private Graphics offGraphics;
 
-    private Rectangle paintNode(GNode n,boolean xray) {
-        int w = fm.stringWidth(n.label);
-        int h = fm.getHeight();
-        int pw = w + 10;
-        int ph = h + 4;
+    private void paintNode(GNode n,boolean xray) {
+        if (!xray) {
+            paintBackground(n);
+        }
+        paintLabel(n);
+    }
+
+    private void paintBackground(GNode n) {
+        setColor(offGraphics,n);
+        offGraphics.fillRect(x(n), y(n), paddedWidth(n), paddedHeight);
+    }
+
+    private void paintLabel(GNode n) {
         int cx = (int) n.x();
         int cy = (int) n.y();
-        int x = cx - pw / 2;
-        int y = cy - ph / 2;
-        if (!xray) {
-            setColor(offGraphics,n);
-            offGraphics.fillRect(x, y, pw, ph);
-        }
         offGraphics.setColor(Color.black);
-        offGraphics.drawRect(x, y, pw, ph);
-        offGraphics.drawString(n.label, cx - w / 2, (cy - h / 2) + fm.getAscent());
-        return new Rectangle(x,y,pw,ph);
+        offGraphics.drawRect(x(n), y(n), paddedWidth(n), paddedHeight);
+        offGraphics.drawString(n.label, cx - width(n) / 2, cy - nodeHeight / 2 + nodeAscent);
+    }
+
+    int paddedWidth(GNode n) {
+        return width(n) + 10;
+    }
+
+    int x(GNode n) {
+        int cx = (int) n.x();
+        return cx - paddedWidth(n) / 2;
+    }
+
+    int y(GNode n) {
+        int cy = (int) n.y();
+        return cy - paddedHeight / 2;
+    }
+
+    int width(GNode n) {
+        return fm.stringWidth(n.label);
     }
 
     private FontMetrics getFontMetrics() {
@@ -56,7 +80,7 @@ class GraphPainter {
         return graph.nodeCount()  + " / " +
             graph.edgeCount()     + " / " +
             graph.crossingCount() + " / " +
-            overlapCount;
+            overlapCount();
     }
 
     private static final Color nodeColor = new Color(250, 220, 100);
@@ -68,7 +92,6 @@ class GraphPainter {
 
     void update(Graphics g,GNode pick,boolean stress,boolean xray) {
         this.pick = pick;
-        overlapCount = 0;
         updateOffscreenGraphics();
         drawEdges(stress);
         drawNodes(xray);
@@ -114,11 +137,17 @@ class GraphPainter {
     }
 
     private void drawNodes(boolean xray) {
+        for (GNode n : graph.nodes()) {
+            paintNode(n,xray);
+        }
+    }
+
+    int overlapCount() {
         List<Rectangle> rects = new ArrayList<>();
         for (GNode n : graph.nodes()) {
-            rects.add(paintNode(n,xray));
+            rects.add(new Rectangle(x(n),y(n),paddedWidth(n),paddedHeight));
         }
-        overlapCount = countOverlaps(rects);
+        return countOverlaps(rects);
     }
 
     private int countOverlaps(List<Rectangle> rects) {

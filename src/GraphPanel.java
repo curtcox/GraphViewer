@@ -76,10 +76,12 @@ class GraphPanel extends Panel {
 
     void scramble() {
         graph.shake();
+        repaint();
     }
 
     void shake() {
         graph.scramble();
+        repaint();
     }
 
     @Override
