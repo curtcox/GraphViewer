@@ -8,10 +8,12 @@ class GraphPainter {
     private int overlapCount;
     private final Graph graph;
     private final GraphPanel panel;
+    private final FontMetrics fm;
 
     GraphPainter(Graph graph, GraphPanel panel) {
         this.graph = graph;
         this.panel = panel;
+        this.fm = getFontMetrics();
     }
 
     private Image offscreen;
@@ -19,7 +21,6 @@ class GraphPainter {
     private Graphics offGraphics;
 
     private Rectangle paintNode(GNode n,boolean xray) {
-        FontMetrics fm = getFontMetrics();
         int w = fm.stringWidth(n.label);
         int h = fm.getHeight();
         int pw = w + 10;
@@ -39,12 +40,12 @@ class GraphPainter {
     }
 
     private FontMetrics getFontMetrics() {
+        ensureOffscreenGraphics();
         return offGraphics.getFontMetrics();
     }
 
     private void drawStats() {
         String s = stats();
-        FontMetrics fm = getFontMetrics();
         Dimension d = size();
         int x = d.width  - fm.stringWidth(s);
         int y = d.height - fm.getHeight();
@@ -75,11 +76,14 @@ class GraphPainter {
         g.drawImage(offscreen, 0, 0, null);
     }
 
-    private void updateOffscreenGraphics() {
+    private void ensureOffscreenGraphics() {
         if (!offscreenGraphicsReady()) {
             createOffscreenGraphics();
         }
+    }
 
+    private void updateOffscreenGraphics() {
+        ensureOffscreenGraphics();
         fillBackground();
     }
 
