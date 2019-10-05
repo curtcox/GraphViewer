@@ -37,51 +37,6 @@ class GNode {
         return v;
     }
 
-    private void adjustDeltasConsidering(GNode[] nodes) {
-        XY delta = computeDelta(nodes);
-        double dlen = delta.dlen();
-        if (dlen > 0) {
-//            dlen = sqrt(dlen) / 2;
-            delta = delta.divideBy(dlen);
-            delta = delta.add(delta);
-        }
-    }
-
-    XY computeDelta(GNode[] nodes) {
-        XY delta = new XY();
-
-        for (GNode n2 : nodes) {
-            if (this == n2) {
-                continue;
-            }
-            XY vector = vectorTo(n2);
-            double len = vector.dlen();
-            if (len == 0) {
-                System.out.println("!!!!!");
-                //delta.add(new XY(random(),random()));
-            } else { // if (len < 100 * 100) {
-                //if (len > 1) {
-                    vector.divideBy(len);
-                //} else {
-                //    vector.multiplyBy(1.0/-len);
-                //}
-                delta.add(vector);
-            }
-        }
-
-        return delta;
-    }
-
-    XY vectorTo(GNode other) {
-        return xy.subtract(other.xy);
-    }
-
-    static void relaxNodes(GNode[] nodes) {
-        for (GNode node : nodes) {
-            //node.adjustDeltasConsidering(nodes);
-        }
-    }
-
     private void scramble(Dimension d) {
         if (!fixed) {
             setXY(10 + (d.width - 20)  * random(),10 + (d.height - 20) * random());

@@ -29,15 +29,8 @@ class XY {
         return divideBy(2);
     }
 
-    XY divideBy(double v) {
+    private XY divideBy(double v) {
         return new XY(x / v, y /v);
     }
 
-    XY multiplyBy(double v) {
-        return new XY(x * v, y  * v);
-    }
-
-    double dlen() {
-        return x * x + y * y;
-    }
 }
