@@ -18,9 +18,17 @@ class GNode {
 
     void relax(Dimension d) {
         if (!fixed) {
-            xy = xy.plus(new XY(bounded(delta.x),bounded(delta.y)));
-            delta = delta.half();
+            contract();
         }
+        restrictTo(d);
+    }
+
+    private void contract() {
+        xy = xy.plus(new XY(bounded(delta.x),bounded(delta.y)));
+        delta = delta.half();
+    }
+
+    private void restrictTo(Dimension d) {
         setXY(boundBy(x(),d.width),boundBy(y(),d.height));
     }
 
