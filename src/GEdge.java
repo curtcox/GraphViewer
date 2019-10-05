@@ -32,11 +32,14 @@ class GEdge {
     }
 
     void relax() {
-        double f = f();
-        XY delta = new XY(f * dx(), f * dy());
-
-        to.delta = to.delta.plus(delta);
+        XY delta   = delta();
+        to.delta   = to.delta.plus(delta);
         from.delta = from.delta.minus(delta);
+    }
+
+    private XY delta() {
+        double f = f();
+        return new XY(f * dx(), f * dy());
     }
 
     private double f() {
