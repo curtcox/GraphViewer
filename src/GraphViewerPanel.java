@@ -3,14 +3,14 @@ import java.awt.event.*;
 
 class GraphViewerPanel extends Panel implements ActionListener, ItemListener {
 
-    final GraphPanel   panel = new GraphPanel();
-    final Panel controlPanel = new Panel();
-    final Button    scramble = new Button("Scramble");
-    final Button       shake = new Button("Shake");
-    final Checkbox    stress = new Checkbox("Stress");
-    final Checkbox      xray = new Checkbox("X-ray");
-    final Checkbox     relax = new Checkbox("Relax");
-    final GraphReader reader;
+    private final GraphPanel   panel = new GraphPanel();
+    private final Panel controlPanel = new Panel();
+    private final Button    scramble = new Button("Scramble");
+    private final Button       shake = new Button("Shake");
+    private final Checkbox    stress = new Checkbox("Stress");
+    private final Checkbox      xray = new Checkbox("X-ray");
+    private final Checkbox     relax = new Checkbox("Relax");
+    private final GraphReader reader;
 
     GraphViewerPanel(GraphReader reader) {
         this.reader = reader;
