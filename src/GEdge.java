@@ -35,8 +35,8 @@ class GEdge {
         double f = f();
         XY delta = new XY(f * dx(), f * dy());
 
-        to.delta = to.delta.add(delta);
-        from.delta = from.delta.subtract(delta);
+        to.delta = to.delta.plus(delta);
+        from.delta = from.delta.minus(delta);
     }
 
     private double f() {

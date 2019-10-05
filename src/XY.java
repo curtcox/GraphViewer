@@ -12,11 +12,11 @@ class XY {
         this.y = y;
     }
 
-    XY add(XY xy) {
+    XY plus(XY xy) {
         return new XY(x + xy.x, y + xy.y);
     }
 
-    XY subtract(XY xy) {
+    XY minus(XY xy) {
         return new XY(x - xy.x, y - xy.y);
     }
 
@@ -26,10 +26,10 @@ class XY {
     }
 
     XY half() {
-        return divideBy(2);
+        return dividedBy(2);
     }
 
-    private XY divideBy(double v) {
+    private XY dividedBy(double v) {
         return new XY(x / v, y /v);
     }
 

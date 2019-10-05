@@ -18,7 +18,7 @@ class GNode {
 
     void relax(Dimension d) {
         if (!fixed) {
-            xy = xy.add(new XY(bounded(delta.x),bounded(delta.y)));
+            xy = xy.plus(new XY(bounded(delta.x),bounded(delta.y)));
         }
         setXY(boundBy(x(),d.width),boundBy(y(),d.height));
         delta = delta.half();
@@ -45,7 +45,7 @@ class GNode {
 
     private void shake() {
         if (!fixed) {
-            xy = xy.add(new XY(80 * random() - 40,80 * random() - 40));
+            xy = xy.plus(new XY(80 * random() - 40,80 * random() - 40));
         }
     }
 
