@@ -70,7 +70,7 @@ class GraphPanel extends Panel {
         addMouseMotionListener(new GraphMouseMotionListener());
     }
 
-    void relax() {
+    private void relax() {
         graph.relax();
     }
 
@@ -92,10 +92,31 @@ class GraphPanel extends Panel {
         new Timer(25, evt -> advance()).start();
     }
 
-    void advance() {
+    private long last;
+    private void advance() {
+        long now = System.currentTimeMillis();
+        long duration = now - last;
+        if (duration > 200) {
+            System.out.println(duration + "ms");
+        }
+        last = now;
         if (relax) {
             relax();
         }
-        repaint();
+        if (relax || dirty(pick,stress,xray)) {
+            repaint();
+        }
     }
+
+    private GNode lastPick = new GNode("");
+    private boolean lastStress;
+    private boolean lastXray;
+    private boolean dirty(GNode pick,boolean stress,boolean xray) {
+        boolean clean = pick == lastPick && stress == lastStress && xray == lastXray;
+        lastPick = pick;
+        lastStress = stress;
+        lastXray = xray;
+        return !clean;
+    }
+
 }

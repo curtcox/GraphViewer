@@ -89,9 +89,7 @@ class GraphPainter {
         offGraphics.fillRect(0, 0, d.width, d.height);
     }
 
-    private Dimension size() {
-        return panel.getSize();
-    }
+    private Dimension size() { return panel.getSize(); }
 
     private boolean offscreenGraphicsReady() {
         Dimension d = size();
@@ -112,7 +110,7 @@ class GraphPainter {
     }
 
     private void drawNodes(boolean xray) {
-        List<Rectangle> rects = new ArrayList();
+        List<Rectangle> rects = new ArrayList<>();
         for (GNode n : graph.nodes()) {
             rects.add(paintNode(n,xray));
         }
