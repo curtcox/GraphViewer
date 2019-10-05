@@ -44,11 +44,11 @@ class GraphViewerPanel extends Panel implements ActionListener, ItemListener {
         if (src == shake)    shake();
     }
 
-    void scramble() {
+    private void scramble() {
         panel.scramble();
     }
 
-    void shake() {
+    private void shake() {
         panel.shake();
     }
 

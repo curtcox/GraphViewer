@@ -40,8 +40,7 @@ class Graph {
         }
     }
 
-    void relaxNodes() {
-        GNode.relaxNodes(nodes);
+    private void relaxNodes() {
         for (GNode n : nodes) {
             n.relax(size);
         }
