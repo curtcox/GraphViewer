@@ -3,22 +3,22 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 
-public class Start {
+class Start {
 
-    static class ExitOnClose extends WindowAdapter {
+    private static class ExitOnClose extends WindowAdapter {
         public void windowClosing(WindowEvent e ) {
             System.exit( 0 );
         }
     }
 
-    static GraphViewerPanel graph(String[] args)  throws IOException {
+    private static GraphViewerPanel graph(String[] args)  throws IOException {
         GraphReader reader = (args.length < 1)
                 ? defaultGraph()
                 : graphFromArgs(args);
         return new GraphViewerPanel(reader);
     }
 
-    static GraphReader defaultGraph() {
+    private static GraphReader defaultGraph() {
         return new GraphReader(new String[] {
                 "|to read graph from standard in|specify a hyphen flag",
                 "|specify a hyphen flag|usage",
@@ -35,7 +35,7 @@ public class Start {
                 "usage");
     }
 
-    static GraphReader graphFromArgs(String[] args) throws IOException {
+    private static GraphReader graphFromArgs(String[] args) throws IOException {
         String center = args.length > 0 ? args[0] : null;
         ArrayList<String> edges = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
