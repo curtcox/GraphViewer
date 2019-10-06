@@ -45,8 +45,9 @@ class Graph {
     void solve(GraphPainter painter, Dimension size) {
         int  best    = defectCount(painter);
         long endTime = System.currentTimeMillis() + 100;
+        GNode node = pickARandomNode();
         while (!after(endTime)) {
-            Position original = randomlyMoveANode(size);
+            Position original = randomlyMove(node,size);
             int defects = defectCount(painter);
             if (defects > best) {
                 original.revert();
@@ -56,8 +57,7 @@ class Graph {
         }
     }
 
-    private Position randomlyMoveANode(Dimension size) {
-        GNode node = pickARandomNode();
+    private Position randomlyMove(GNode node, Dimension size) {
         Position position = new Position();
         position.node = node;
         position.start = node.xy;
