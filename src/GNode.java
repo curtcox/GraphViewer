@@ -3,7 +3,7 @@ import java.awt.*;
 import static java.lang.Math.*;
 
 class GNode {
-    private XY xy;
+    XY xy;
     XY delta = new XY();
     boolean fixed;
     final String label;

@@ -7,6 +7,7 @@ class GraphPanel extends Panel {
     Graph graph;
     boolean stress;
     boolean relax;
+    boolean solve;
     boolean xray;
     private int numMouseButtonsDown;
     private GNode pick;
@@ -74,6 +75,10 @@ class GraphPanel extends Panel {
         graph.relax(getSize());
     }
 
+    private void solve() {
+        graph.solve(painter,getSize());
+    }
+
     void scramble() {
         graph.shake();
         repaint();
@@ -102,10 +107,9 @@ class GraphPanel extends Panel {
             System.out.println(duration + "ms");
         }
         last = now;
-        if (relax) {
-            relax();
-        }
-        if (relax || dirty(pick,stress,xray)) {
+        if (relax) { relax(); }
+        if (solve) { solve(); }
+        if (relax || solve || dirty(pick,stress,xray)) {
             repaint();
         }
     }

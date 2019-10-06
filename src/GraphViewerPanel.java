@@ -10,6 +10,7 @@ class GraphViewerPanel extends Panel implements ActionListener, ItemListener {
     private final Checkbox    stress = new Checkbox("Stress");
     private final Checkbox      xray = new Checkbox("X-ray");
     private final Checkbox     relax = new Checkbox("Relax");
+    private final Checkbox     solve = new Checkbox("Solve");
     private final GraphReader reader;
 
     GraphViewerPanel(GraphReader reader) {
@@ -26,11 +27,13 @@ class GraphViewerPanel extends Panel implements ActionListener, ItemListener {
         controlPanel.add(stress);
         controlPanel.add(xray);
         controlPanel.add(relax);
+        controlPanel.add(solve);
         scramble.addActionListener(this);
         shake.addActionListener(this);
         stress.addItemListener(this);
         xray.addItemListener(this);
         relax.addItemListener(this);
+        solve.addItemListener(this);
     }
 
     void start() {
@@ -58,6 +61,7 @@ class GraphViewerPanel extends Panel implements ActionListener, ItemListener {
         boolean on = e.getStateChange() == ItemEvent.SELECTED;
         if (src == stress) { panel.stress = on; }
         if (src == relax)  { panel.relax = on; }
+        if (src == solve)  { panel.solve = on; }
         if (src == xray)   { panel.xray = on; }
     }
 
