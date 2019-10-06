@@ -5,12 +5,10 @@ class Graph {
 
     private final GEdge[] edges;
     private final GNode[] nodes;
-    private final Dimension size;
 
-    Graph(GEdge[] edges, GNode[] nodes, Dimension size) {
+    Graph(GEdge[] edges, GNode[] nodes) {
         this.edges = edges;
         this.nodes = nodes;
-        this.size = size;
     }
 
     GEdge[] edges() { return edges; }
@@ -29,10 +27,10 @@ class Graph {
         return count;
     }
 
-    void relax() {
+    void relax(Dimension size) {
         contractEdges();
         GNode.repelOtherNodes(nodes);
-        moveNodes();
+        moveNodes(size);
     }
 
     private void contractEdges() {
@@ -41,13 +39,13 @@ class Graph {
         }
     }
 
-    private void moveNodes() {
+    private void moveNodes(Dimension size) {
         for (GNode n : nodes) {
             n.moveRestrictedTo(size);
         }
     }
 
-    void scramble() {
+    void scramble(Dimension size) {
         GNode.scramble(nodes,size);
     }
 

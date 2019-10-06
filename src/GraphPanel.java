@@ -71,7 +71,7 @@ class GraphPanel extends Panel {
     }
 
     private void relax() {
-        graph.relax();
+        graph.relax(getSize());
     }
 
     void scramble() {
@@ -80,7 +80,7 @@ class GraphPanel extends Panel {
     }
 
     void shake() {
-        graph.scramble();
+        graph.scramble(getSize());
         repaint();
     }
 

@@ -34,7 +34,7 @@ class GraphViewerPanel extends Panel implements ActionListener, ItemListener {
     }
 
     void start() {
-        panel.graph = reader.read(panel.getSize());
+        panel.graph = reader.read();
         panel.start();
     }
 

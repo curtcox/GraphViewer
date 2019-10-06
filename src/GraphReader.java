@@ -5,7 +5,6 @@ import static java.lang.Math.random;
 
 class GraphReader {
 
-    private Dimension d;
     private final String[] edgeLines;
     private final String center;
     private GEdge[] edges = new GEdge[0];
@@ -16,11 +15,10 @@ class GraphReader {
         this.center = center;
     }
 
-    Graph read(Dimension d) {
-        this.d = d;
+    Graph read() {
         addEdges();
         addCenter();
-        return new Graph(edges,nodes,d);
+        return new Graph(edges,nodes);
     }
 
     private GNode findNodeFromLabel(String lbl) {
@@ -96,7 +94,7 @@ class GraphReader {
     private void addCenter() {
         if (center != null) {
             GNode n = findNodeFromLabel(center);
-            n.setXY(d.width  / 2.0,d.height / 2.0);
+            n.setXY(500,500);
             n.fixed = true;
         }
     }
