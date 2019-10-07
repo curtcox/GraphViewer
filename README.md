@@ -2,6 +2,12 @@
 For viewing a set of nodes and edges.
 This has been heavily refactored, but is based on a JDK example applet. 
 
+# See Also
+1. Graphviz http://www.graphviz.org/
+1. Using Automatic Clustering to Produce High-Level System Organizations of Source Code https://www.cs.drexel.edu/~spiros/papers/iwpc98.pdf
+1. On the Automatic Modularization of Software Systems Using the Bunch Tool https://www.cs.drexel.edu/~spiros/papers/Mancoridis-TSE-0035-0304.pdf
+1. Bunch https://github.com/ArchitectingSoftware/Bunch
+
 # Copyright
 Copyright (c) 2007, 2011, Oracle and/or its affiliates. All rights reserved.
 
