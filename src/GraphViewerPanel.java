@@ -1,16 +1,19 @@
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-class GraphViewerPanel extends Panel implements ActionListener, ItemListener {
+class GraphViewerPanel extends JPanel {
 
     private final GraphPanel   panel = new GraphPanel();
-    private final Panel controlPanel = new Panel();
-    private final Button    scramble = new Button("Scramble");
-    private final Button       shake = new Button("Shake");
-    private final Checkbox    stress = new Checkbox("Stress");
-    private final Checkbox      xray = new Checkbox("X-ray");
-    private final Checkbox     relax = new Checkbox("Relax");
-    private final Checkbox     solve = new Checkbox("Solve");
+    private final JPanel controlPanel = new JPanel();
+    private final JButton    scramble = new JButton("Scramble");
+    private final JButton       shake = new JButton("Shake");
+    private final JCheckBox    stress = new JCheckBox("Stress");
+    private final JCheckBox      xray = new JCheckBox("X-ray");
+    private final JCheckBox     relax = new JCheckBox("Relax");
+    private final JCheckBox     solve = new JCheckBox("Solve");
     private final GraphReader reader;
 
     GraphViewerPanel(GraphReader reader) {
@@ -28,23 +31,17 @@ class GraphViewerPanel extends Panel implements ActionListener, ItemListener {
         controlPanel.add(xray);
         controlPanel.add(relax);
         controlPanel.add(solve);
-        scramble.addActionListener(this);
-        shake.addActionListener(this);
-        stress.addItemListener(this);
-        xray.addItemListener(this);
-        relax.addItemListener(this);
-        solve.addItemListener(this);
+        scramble.addActionListener(e -> scramble());
+        shake.addActionListener(e -> shake());
+        stress.addActionListener(e -> panel.stress = stress.isSelected());
+        xray.addActionListener(e -> panel.xray = xray.isSelected());
+        relax.addActionListener(e -> panel.relax = relax.isSelected());
+        solve.addActionListener(e -> panel.solve = solve.isSelected());
     }
 
     void start() {
         panel.graph = reader.read();
         panel.start();
-    }
-
-    public void actionPerformed(ActionEvent e) {
-        Object src = e.getSource();
-        if (src == scramble) scramble();
-        if (src == shake)    shake();
     }
 
     private void scramble() {
@@ -53,16 +50,6 @@ class GraphViewerPanel extends Panel implements ActionListener, ItemListener {
 
     private void shake() {
         panel.shake();
-    }
-
-    @Override
-    public void itemStateChanged(ItemEvent e) {
-        Object src = e.getSource();
-        boolean on = e.getStateChange() == ItemEvent.SELECTED;
-        if (src == stress) { panel.stress = on; }
-        if (src == relax)  { panel.relax = on; }
-        if (src == solve)  { panel.solve = on; }
-        if (src == xray)   { panel.xray = on; }
     }
 
 }

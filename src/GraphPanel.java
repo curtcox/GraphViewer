@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-class GraphPanel extends Panel {
+class GraphPanel extends JPanel {
 
     Graph graph;
     boolean stress;
@@ -90,11 +90,12 @@ class GraphPanel extends Panel {
     }
 
     @Override
-    public void update(Graphics g) {
+    public void paint(Graphics g) {
         painter.update(g,pick,stress,xray);
     }
 
     public void start() {
+        println("Start");
         painter = new GraphPainter(graph,this);
         new Timer(25, evt -> advance()).start();
     }
@@ -104,7 +105,7 @@ class GraphPanel extends Panel {
         long now = System.currentTimeMillis();
         long duration = now - last;
         if (duration > 200) {
-            System.out.println(duration + "ms");
+            println(duration + "ms");
         }
         last = now;
         if (relax) { relax(); }
@@ -112,6 +113,10 @@ class GraphPanel extends Panel {
         if (relax || solve || dirty(pick,stress,xray)) {
             repaint();
         }
+    }
+
+    static void println(String s) {
+        System.out.println(s);
     }
 
     private GNode lastPick = new GNode("");

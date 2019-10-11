@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -47,7 +48,7 @@ class Start {
     }
 
     public static void main(String[] args)  throws IOException {
-        Frame frame = new Frame( "Graph" );
+        Frame frame = new JFrame( "Graph" );
         GraphViewerPanel graph = graph(args);
         frame.addWindowListener( new ExitOnClose());
         frame.add(graph);
