@@ -83,10 +83,18 @@ class GraphPainter {
     }
 
     private static final Color nodeColor = new Color(250, 220, 100);
+    private static final Color cycleColor = new Color(200, 200, 200);
     private void setColor(Graphics g, GNode n) {
-        final Color  fixedColor = Color.red;
-        final Color selectColor = Color.pink;
-        g.setColor((n == pick) ? selectColor : (n.fixed ? fixedColor : nodeColor));
+        var  fixedColor = Color.red;
+        var selectColor = Color.pink;
+        var color = n.fixed ? fixedColor : nodeColor;
+        if (n==pick) {
+            color = selectColor;
+        }
+        if (n.isInCycle) {
+            color = cycleColor;
+        }
+        g.setColor(color);
     }
 
     void update(Graphics g,GNode pick,boolean stress,boolean xray) {

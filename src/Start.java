@@ -25,6 +25,7 @@ class Start {
                 "|specify a hyphen flag|usage",
 
                 "|to see this graph|specify no flags",
+                "|specify no flags|to see this graph",
                 "|specify no flags|usage",
 
                 "|to mark center|specify a string with no hyphen",
