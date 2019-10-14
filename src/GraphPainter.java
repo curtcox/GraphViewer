@@ -22,7 +22,6 @@ class GraphPainter {
     }
 
     private Image offscreen;
-    private Dimension offscreenSize;
     private Graphics offGraphics;
 
     private void paintNode(GNode n,boolean xray) {
@@ -64,7 +63,7 @@ class GraphPainter {
     }
 
     private FontMetrics getFontMetrics() {
-        ensureOffscreenGraphics();
+        createOffscreenGraphics();
         return offGraphics.getFontMetrics();
     }
 
@@ -99,14 +98,8 @@ class GraphPainter {
         g.drawImage(offscreen, 0, 0, null);
     }
 
-    private void ensureOffscreenGraphics() {
-        if (!offscreenGraphicsReady()) {
-            createOffscreenGraphics();
-        }
-    }
-
     private void updateOffscreenGraphics() {
-        ensureOffscreenGraphics();
+        createOffscreenGraphics();
         fillBackground();
     }
 
@@ -118,17 +111,9 @@ class GraphPainter {
 
     private Dimension size() { return panel.getSize(); }
 
-    private boolean offscreenGraphicsReady() {
-        Dimension d = size();
-        return offscreen != null &&
-            d.width  == offscreenSize.width &&
-            d.height == offscreenSize.height;
-    }
-
     private void createOffscreenGraphics() {
         Dimension d = size();
         offscreen = panel.createImage(d.width, d.height);
-        offscreenSize = d;
         if (offGraphics != null) {
             offGraphics.dispose();
         }
