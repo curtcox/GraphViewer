@@ -27,6 +27,56 @@ class Graph {
         return count;
     }
 
+    void markCycles() {
+        for (GNode node : nodes()) {
+            node.isInCycle = isNodeInCycle(node);
+        }
+    }
+
+    private boolean isNodeInCycle(GNode node) {
+        return descendantsOf(node).contains(node);
+    }
+
+    private Collection<GNode> descendantsOf(GNode node) {
+        var all = new LinkedList<GNode>();
+        var todo = new LinkedList<GNode>();
+        todo.add(node);
+        var loop = false;
+        while (!todo.isEmpty() && !loop) {
+            GNode current = todo.removeFirst();
+            all.add(current);
+            for (GNode child : childrenOf(current)) {
+                if (all.contains(child)) {
+                    loop = true;
+                }
+                todo.add(child);
+            }
+        }
+        if (!loop) {
+            all.remove(node);
+        }
+        return all;
+    }
+
+    private Collection<GNode> childrenOf(GNode node) {
+        var all = new HashSet<GNode>();
+        for (GNode other : nodes) {
+            if (isChildOf(other,node)) {
+                all.add(other);
+            }
+        }
+        return all;
+    }
+
+    private boolean isChildOf(GNode other, GNode node) {
+        for (GEdge edge : edges) {
+            if (edge.from == node && edge.to == other) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     void relax(Dimension size) {
         contractEdges();
         GNode.repelOtherNodes(nodes);

@@ -6,7 +6,7 @@ class GNode {
     XY xy;
     XY delta = new XY();
     boolean fixed;
-    boolean isCircuit;
+    boolean isInCycle;
     final String label;
 
     GNode(String label) {

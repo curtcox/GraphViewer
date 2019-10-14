@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.util.*;
 
 import static java.lang.Math.random;
@@ -18,7 +17,9 @@ class GraphReader {
     Graph read() {
         addEdges();
         addCenter();
-        return new Graph(edges,nodes);
+        var graph = new Graph(edges,nodes);
+        graph.markCycles();
+        return graph;
     }
 
     private GNode findNodeFromLabel(String lbl) {
@@ -31,21 +32,21 @@ class GraphReader {
     }
 
     private GNode addNode(GNode n) {
-        GNode[] old = nodes;
+        var old = nodes;
         nodes = new GNode[old.length + 1];
         append(old,nodes,n);
         return n;
     }
 
     private GNode newNodeAtRandomLocation(String lbl) {
-        GNode n = new GNode(lbl);
+        var n = new GNode(lbl);
         n.setXY(10 + 380 * random(),10 + 380 * random());
         return n;
     }
 
     private void addEdge(String from, String to, int len) {
-        GEdge e = new GEdge(findNodeFromLabel(from),findNodeFromLabel(to),len);
-        GEdge[] old = edges;
+        var e = new GEdge(findNodeFromLabel(from),findNodeFromLabel(to),len);
+        var old = edges;
         edges = new GEdge[old.length + 1];
         append(old,edges,e);
     }
@@ -58,7 +59,7 @@ class GraphReader {
     }
 
     private void addEdges() {
-        for (String line : edgeLines) {
+        for (var line : edgeLines) {
             if (isValidEdgeFormat(line)) {
                 addEdge(line);
             } else {
@@ -84,16 +85,16 @@ class GraphReader {
     }
 
     private void addEdge(String line) {
-        String[] parts = partsOf(line);
+        var parts = partsOf(line);
         int len = (parts.length == 3) ? Integer.parseInt(parts[2]) : 50;
-        String from = parts[0];
-        String   to = parts[1];
+        var from = parts[0];
+        var   to = parts[1];
         addEdge(from, to, len);
     }
 
     private void addCenter() {
         if (center != null) {
-            GNode n = findNodeFromLabel(center);
+            var n = findNodeFromLabel(center);
             n.setXY(500,500);
             n.fixed = true;
         }
