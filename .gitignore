@@ -2,7 +2,8 @@
 out
 src/*.class
 src/.DS_Store
-.idea
+.idea/workspace.xml
+.idea/$PRODUCT_WORKSPACE_FILE$
 .gradle
 gradle
 build
