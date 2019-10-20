@@ -8,6 +8,5 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="groovy-2.5.8" level="application" />
-    <orderEntry type="library" name="KotlinJavaRuntime (2)" level="project" />
   </component>
 </module>
