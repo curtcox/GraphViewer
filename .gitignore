@@ -3,3 +3,6 @@ out
 src/*.class
 src/.DS_Store
 .idea
+.gradle
+gradle
+build
