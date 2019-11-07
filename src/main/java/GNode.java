@@ -58,6 +58,10 @@ class GNode {
         }
     }
 
+    private double squared(double x) {
+        return x * x;
+    }
+
     static void scramble(GNode[] nodes,Dimension d) {
         for (var n : nodes) {
             n.scramble(d);
@@ -71,9 +75,7 @@ class GNode {
     }
 
     double distanceTo(XY xy) {
-        double dx = this.x() - xy.x;
-        double dy = this.y() - xy.y;
-        return  dx * dx + dy * dy;
+        return squared(x() - xy.x) + squared(y() - xy.y);
     }
 
     static void repelOtherNodes(GNode[] nodes) {
