@@ -59,13 +59,13 @@ class GNode {
     }
 
     static void scramble(GNode[] nodes,Dimension d) {
-        for (GNode n : nodes) {
+        for (var n : nodes) {
             n.scramble(d);
         }
     }
 
     static void shake(GNode[] nodes) {
-        for (GNode n : nodes) {
+        for (var n : nodes) {
             n.shake();
         }
     }
@@ -77,8 +77,8 @@ class GNode {
     }
 
     static void repelOtherNodes(GNode[] nodes) {
-        for (GNode n1 : nodes) {
-            for (GNode n2 : nodes) {
+        for (var n1 : nodes) {
+            for (var n2 : nodes) {
                 if (n1!=n2) {
                     repelNodes(n1,n2);
                 }
@@ -87,7 +87,7 @@ class GNode {
     }
 
     private static void repelNodes(GNode n1, GNode n2) {
-        GEdge edge = new GEdge(n1,n2,1.0);
+        var edge = new GEdge(n1,n2,1.0);
         edge.repel();
     }
 

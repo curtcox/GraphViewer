@@ -68,8 +68,8 @@ class GraphPainter {
     }
 
     private void drawStats() {
-        String s = stats();
-        Dimension d = size();
+        var s = stats();
+        var d = size();
         int x = d.width  - fm.stringWidth(s);
         int y = d.height - fm.getHeight();
         offGraphics.drawString(s, x, y);
@@ -136,8 +136,8 @@ class GraphPainter {
     }
 
     int overlapCount() {
-        List<Rectangle> rects = new ArrayList<>();
-        for (GNode n : graph.nodes()) {
+        var rects = new ArrayList<Rectangle>();
+        for (var n : graph.nodes()) {
             rects.add(new Rectangle(x(n),y(n),paddedWidth(n),paddedHeight));
         }
         return countOverlaps(rects);
@@ -145,8 +145,8 @@ class GraphPainter {
 
     private int countOverlaps(List<Rectangle> rects) {
         int count = 0;
-        for (Rectangle r1 : rects) {
-            for (Rectangle r2 : rects) {
+        for (var r1 : rects) {
+            for (var r2 : rects) {
                 if (r1 != r2 && r1.intersects(r2)) {
                     count++;
                 }
@@ -156,7 +156,7 @@ class GraphPainter {
     }
 
     private void drawEdges(boolean stress) {
-        for (GEdge e : graph.edges()) {
+        for (var e : graph.edges()) {
             drawEdge(e,stress);
         }
     }

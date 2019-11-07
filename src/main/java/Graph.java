@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.util.*;
 
-class Graph {
+final class Graph {
 
     private final GEdge[] edges;
     private final GNode[] nodes;
@@ -69,7 +69,7 @@ class Graph {
     }
 
     private boolean isChildOf(GNode other, GNode node) {
-        for (GEdge edge : edges) {
+        for (var edge : edges) {
             if (edge.from == node && edge.to == other) {
                 return true;
             }
@@ -95,9 +95,9 @@ class Graph {
     void solve(GraphPainter painter, Dimension size) {
         int  best    = defectCount(painter);
         long endTime = System.currentTimeMillis() + 100;
-        GNode node = pickARandomNode();
+        var node = pickARandomNode();
         while (!after(endTime)) {
-            Position original = randomlyMove(node,size);
+            var original = randomlyMove(node,size);
             int defects = defectCount(painter);
             if (defects > best) {
                 original.revert();
@@ -108,7 +108,7 @@ class Graph {
     }
 
     private Position randomlyMove(GNode node, Dimension size) {
-        Position position = new Position();
+        var position = new Position();
         position.node = node;
         position.start = node.xy;
         node.xy = new XY(random(size.width),random(size.height));
@@ -157,7 +157,7 @@ class Graph {
         double bestdist = Double.MAX_VALUE;
         GNode nearest = null;
 
-        for (GNode n : nodes) {
+        for (var n : nodes) {
             double dist = n.distanceTo(new XY(x,y));
             if (dist < bestdist) {
                 nearest = n;

@@ -13,7 +13,7 @@ class Start {
     }
 
     private static GraphViewerPanel graph(String[] args)  throws IOException {
-        GraphReader reader = (args.length < 1)
+        var reader = (args.length < 1)
                 ? defaultGraph()
                 : graphFromArgs(args);
         return new GraphViewerPanel(reader);
@@ -39,9 +39,9 @@ class Start {
 
     private static GraphReader graphFromArgs(String[] args) throws IOException {
         String center = args.length > 0 ? args[0] : null;
-        ArrayList<String> edges = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
-            for (String line = br.readLine();line!=null;line=br.readLine()) {       
+        var edges = new ArrayList<>();
+        try (var br = new BufferedReader(new InputStreamReader(System.in))) {
+            for (var line = br.readLine();line!=null;line=br.readLine()) {
                 edges.add(line);
             }
         }
@@ -49,8 +49,8 @@ class Start {
     }
 
     public static void main(String[] args)  throws IOException {
-        Frame frame = new JFrame( "Graph" );
-        GraphViewerPanel graph = graph(args);
+        var frame = new JFrame( "Graph" );
+        var graph = graph(args);
         frame.addWindowListener( new ExitOnClose());
         frame.add(graph);
         frame.setSize( 1000, 1000 );

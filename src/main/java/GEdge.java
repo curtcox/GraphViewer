@@ -2,7 +2,7 @@ import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 import static java.awt.geom.Line2D.linesIntersect;
 
-class GEdge {
+final class GEdge {
 
     final GNode from;
     final GNode to;
