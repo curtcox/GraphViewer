@@ -115,7 +115,7 @@ class GraphPanel extends JPanel {
         }
     }
 
-    static void println(String s) {
+    private static void println(String s) {
         System.out.println(s);
     }
 

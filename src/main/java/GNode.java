@@ -2,7 +2,7 @@ import java.awt.*;
 
 import static java.lang.Math.*;
 
-class GNode {
+final class GNode {
     XY xy;
     XY delta = new XY();
     boolean fixed;
@@ -92,7 +92,6 @@ class GNode {
         var edge = new GEdge(n1,n2,1.0);
         edge.repel();
     }
-
 
     public String toString() {
         return label + " @ " + xy;

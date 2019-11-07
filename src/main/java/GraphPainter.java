@@ -44,21 +44,21 @@ class GraphPainter {
         offGraphics.drawString(n.label, cx - width(n) / 2, cy - nodeHeight / 2 + nodeAscent);
     }
 
-    int paddedWidth(GNode n) {
+    private int paddedWidth(GNode n) {
         return width(n) + 10;
     }
 
-    int x(GNode n) {
+    private int x(GNode n) {
         int cx = (int) n.x();
         return cx - paddedWidth(n) / 2;
     }
 
-    int y(GNode n) {
+    private int y(GNode n) {
         int cy = (int) n.y();
         return cy - paddedHeight / 2;
     }
 
-    int width(GNode n) {
+    private int width(GNode n) {
         return fm.stringWidth(n.label);
     }
 
