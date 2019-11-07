@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
@@ -47,7 +48,7 @@ class Start {
         return new GraphReader(edges.toArray(new String[0]),center);
     }
 
-    public static void main(String[] args)  throws IOException {
+    private static void showFrame(String[] args) throws IOException {
         var frame = new JFrame( "Graph" );
         var graph = graph(args);
         frame.addWindowListener( new ExitOnClose());
@@ -57,6 +58,16 @@ class Start {
 
         frame.setVisible(true);
         graph.start();
+    }
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> {
+            try {
+                showFrame(args);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
 }
