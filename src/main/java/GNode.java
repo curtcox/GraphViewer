@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.ArrayList;
 
 import static java.lang.Math.*;
 
@@ -6,7 +7,7 @@ final class GNode {
     XY xy;
     XY delta = new XY();
     boolean fixed;
-    boolean isInCycle;
+    ArrayList<Integer> cycles = new ArrayList<>();
     final String label;
 
     GNode(String label) {
@@ -16,6 +17,10 @@ final class GNode {
     double x() { return xy.x; }
     double y() { return xy.y; }
     void setXY(double x, double y) { this.xy = new XY(x,y); }
+
+    boolean isInCycle() {
+        return !cycles.isEmpty();
+    }
 
     void moveRestrictedTo(Dimension d) {
         if (!fixed) {

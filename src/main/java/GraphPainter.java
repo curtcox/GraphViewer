@@ -91,7 +91,7 @@ class GraphPainter {
         if (n==pick) {
             color = selectColor;
         }
-        if (n.isInCycle) {
+        if (n.isInCycle()) {
             color = cycleColor;
         }
         g.setColor(color);

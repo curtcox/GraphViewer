@@ -28,8 +28,12 @@ final class Graph {
     }
 
     void markCycles() {
+        int cycle = 0;
         for (GNode node : nodes()) {
-            node.isInCycle = isNodeInCycle(node);
+            if (isNodeInCycle(node)) {
+                cycle++;
+                node.cycles.add(cycle);
+            }
         }
     }
 
