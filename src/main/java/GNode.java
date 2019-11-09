@@ -1,5 +1,6 @@
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.lang.Math.*;
 
@@ -7,7 +8,7 @@ final class GNode {
     XY xy;
     XY delta = new XY();
     boolean fixed;
-    ArrayList<Integer> cycles = new ArrayList<>();
+    Set<Cycle> cycles = new HashSet<>();
     final String label;
 
     GNode(String label) {
@@ -99,7 +100,12 @@ final class GNode {
     }
 
     public String toString() {
-        return label + " @ " + xy;
+        return label;// + " @ " + xy;
     }
 
+    public int hashCode() { return label.hashCode(); }
+    public boolean equals(Object o) {
+        GNode that = (GNode) o;
+        return label.equals(that.label);
+    }
 }

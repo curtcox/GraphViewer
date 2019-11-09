@@ -83,7 +83,9 @@ class GraphPainter {
     }
 
     private static final Color nodeColor = new Color(250, 220, 100);
-    private static final Color cycleColor = new Color(200, 200, 200);
+    private static final Color color(Set<Cycle> cycles) {
+        return cycles.iterator().next().color;
+    }
     private void setColor(Graphics g, GNode n) {
         var  fixedColor = Color.red;
         var selectColor = Color.pink;
@@ -92,7 +94,7 @@ class GraphPainter {
             color = selectColor;
         }
         if (n.isInCycle()) {
-            color = cycleColor;
+            color = color(n.cycles);
         }
         g.setColor(color);
     }
