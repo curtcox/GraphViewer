@@ -82,19 +82,17 @@ class GraphPainter {
             overlapCount();
     }
 
-    private static final Color nodeColor = new Color(250, 220, 100);
-    private static final Color color(Set<Cycle> cycles) {
-        return cycles.iterator().next().color;
+    private static final Color color(Knot knot) {
+        return Colors.unique(knot.number);
     }
+
     private void setColor(Graphics g, GNode n) {
-        var  fixedColor = Color.red;
-        var selectColor = Color.pink;
-        var color = n.fixed ? fixedColor : nodeColor;
+        var color = n.fixed ? Colors.fixedColor : Colors.nodeColor;
         if (n==pick) {
-            color = selectColor;
+            color = Colors.selectColor;
         }
         if (n.isInCycle()) {
-            color = color(n.cycles);
+            color = color(n.knot);
         }
         g.setColor(color);
     }

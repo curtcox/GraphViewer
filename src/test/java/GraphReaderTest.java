@@ -28,7 +28,7 @@ public class GraphReaderTest {
         var nodes = graph.nodes();
         assertEquals(5,nodes.length);
         for (GNode node : nodes) {
-            assertFalse(node.isInCycle);
+            assertFalse(node.isInCycle());
         }
     }
 
@@ -41,7 +41,7 @@ public class GraphReaderTest {
         var nodes = graph.nodes();
         assertEquals(5,nodes.length);
         for (GNode node : nodes) {
-            assertFalse(node.isInCycle);
+            assertFalse(node.isInCycle());
         }
     }
 
@@ -54,7 +54,7 @@ public class GraphReaderTest {
         var nodes = graph.nodes();
         assertEquals(1,nodes.length);
         var node = graph.nodes()[0];
-        assertTrue(node.isInCycle);
+        assertTrue(node.isInCycle());
     }
 
     @Test
@@ -66,7 +66,7 @@ public class GraphReaderTest {
         var nodes = graph.nodes();
         assertEquals(2,nodes.length);
         for (GNode node : nodes) {
-            assertTrue(node.isInCycle);
+            assertTrue(node.isInCycle());
         }
     }
 
@@ -79,7 +79,7 @@ public class GraphReaderTest {
         var nodes = graph.nodes();
         assertEquals(3,nodes.length);
         for (GNode node : nodes) {
-            assertTrue(node.isInCycle);
+            assertTrue(node.isInCycle());
         }
     }
 
@@ -92,7 +92,7 @@ public class GraphReaderTest {
         var nodes = graph.nodes();
         assertEquals(4,nodes.length);
         for (GNode node : nodes) {
-            assertTrue(node.isInCycle);
+            assertTrue(node.isInCycle());
         }
     }
 

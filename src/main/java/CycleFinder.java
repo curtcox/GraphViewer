@@ -13,7 +13,7 @@ final class CycleFinder {
 
     void markCycles() {
         for (var node : nodes()) {
-            node.cycles = cyclesContainingNode(node);
+            node.knot = Knot.of(cyclesContainingNode(node));
         }
     }
 

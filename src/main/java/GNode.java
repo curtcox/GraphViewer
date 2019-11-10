@@ -8,8 +8,8 @@ final class GNode {
     XY xy;
     XY delta = new XY();
     boolean fixed;
-    Set<Cycle> cycles = new HashSet<>();
     final String label;
+    Knot knot;
 
     GNode(String label) {
         this.label = label;
@@ -20,7 +20,7 @@ final class GNode {
     void setXY(double x, double y) { this.xy = new XY(x,y); }
 
     boolean isInCycle() {
-        return !cycles.isEmpty();
+        return !knot.isEmpty();
     }
 
     void moveRestrictedTo(Dimension d) {
@@ -100,7 +100,7 @@ final class GNode {
     }
 
     public String toString() {
-        return label;// + " @ " + xy;
+        return label;
     }
 
     public int hashCode() { return label.hashCode(); }

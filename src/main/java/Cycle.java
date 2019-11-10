@@ -1,29 +1,29 @@
-import java.awt.*;
 import java.util.*;
 
 final class Cycle {
 
-    final Color color;
     final Set<GNode> nodes;
     static final Map<Set<GNode>,Cycle> cycles = new HashMap<>();
 
-    private Cycle(Set<GNode> nodes, Color color) {
+    private Cycle(Set<GNode> nodes) {
         this.nodes = nodes;
-        this.color = color;
     }
 
     static Cycle of(Set<GNode> nodes) {
         if (cycles.containsKey(nodes)) {
             return cycles.get(nodes);
         }
-        var cycle = new Cycle(nodes,color(cycles.size()));
+        var cycle = new Cycle(nodes);
         cycles.put(nodes,cycle);
         System.out.println("Cycle #" + cycles.size() + " contains " + nodes);
         return cycle;
     }
 
-    private static final Color color(int number) {
-        return new Color(50, 200, 50);
+    public int hashCode() { return nodes.hashCode(); }
+    public boolean equals(Object o) {
+        var that = (Cycle) o;
+        return nodes.equals(that.nodes);
     }
 
+    public String toString() { return "cycle(" + nodes + ")"; }
 }
