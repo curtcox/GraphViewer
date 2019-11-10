@@ -1,6 +1,4 @@
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 final class CycleFinder {
 
@@ -14,46 +12,40 @@ final class CycleFinder {
     GNode[] nodes() { return graph.nodes(); }
 
     void markCycles() {
-        for (GNode node : nodes()) {
-            var cycle = cycleContainingNode(node);
-            if (cycle != null) {
-                node.cycles.add(cycle);
+        for (var node : nodes()) {
+            node.cycles = cyclesContainingNode(node);
+        }
+    }
+
+    private Set<Cycle> cyclesContainingNode(GNode node) {
+        var cycles = new HashSet<Cycle>();
+        for (var chain : descendantsOf(node)) {
+            if (chain.isCycle()) {
+                cycles.add(Cycle.of(new HashSet(chain.path)));
             }
         }
+        return cycles;
     }
 
-    private Cycle cycleContainingNode(GNode node) {
-        var descendants = descendantsOf(node);
-        if (descendants.contains(node)) {
-            return Cycle.of(descendants);
-        } else {
-            return null;
-        }
-    }
-
-    private Set<GNode> descendantsOf(final GNode root) {
-        var descendants = new HashSet<GNode>();
-        var todo = new LinkedList<GNode>();
-        var done = new HashSet<GNode>();
+    private Set<Chain> descendantsOf(final GNode root) {
+        var chains = new HashMap<GNode,Chain>(); // end node -> chain
+        var todo = new HashSet<GNode>();
         todo.add(root);
-        boolean cycle = false;
+        chains.put(root,Chain.EMPTY.plus(root));
         while (!todo.isEmpty()) {
-            var current = todo.removeFirst();
-            descendants.add(current);
-            done.add(current);
+            GNode current = todo.iterator().next();
+            todo.remove(current);
+            var chain = chains.get(current);
             for (var child : childrenOf(current)) {
-                if (child.equals(root)) {
-                    cycle = true;
-                }
-                if (!done.contains(child)) {
+                if (chain.addingWouldMakeCompleteCycle(child)) {
+                    chains.put(child,chain.plus(child));
+                } else if (!chain.addingWouldMakeCycleWithTail(child)) {
+                    chains.put(child,chain.plus(child));
                     todo.add(child);
                 }
             }
         }
-        if (!cycle) {
-            descendants.remove(root);
-        }
-        return descendants;
+        return new HashSet<>(chains.values());
     }
 
     private Set<GNode> childrenOf(GNode node) {

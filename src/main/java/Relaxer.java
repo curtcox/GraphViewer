@@ -18,13 +18,13 @@ final class Relaxer {
     }
 
     private void contractEdges() {
-        for (GEdge e : edges()) {
+        for (var e : edges()) {
             e.contract();
         }
     }
 
     private void moveNodes(Dimension size) {
-        for (GNode n : nodes()) {
+        for (var n : nodes()) {
             n.moveRestrictedTo(size);
         }
     }
