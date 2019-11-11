@@ -119,7 +119,7 @@ class GraphPanel extends JPanel {
         System.out.println(s);
     }
 
-    private GNode lastPick = new GNode("");
+    private GNode lastPick = GNode.of("");
     private boolean lastStress;
     private boolean lastXray;
     private boolean dirty(GNode pick,boolean stress,boolean xray) {

@@ -1,16 +1,30 @@
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.lang.Math.*;
 
 final class GNode {
+
     XY xy;
     XY delta = new XY();
     boolean fixed;
     final String label;
     Knot knot;
 
-    GNode(String label) {
+    private static final Map<String,GNode> nodes = new HashMap<>();
+
+    private GNode(String label) {
         this.label = label;
+    }
+
+    static GNode of(String label) {
+        if (nodes.containsKey(label)) {
+            return nodes.get(label);
+        }
+        var node = new GNode(label);
+        nodes.put(label,node);
+        return node;
     }
 
     double x() { return xy.x; }

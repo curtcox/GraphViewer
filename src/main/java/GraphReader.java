@@ -39,7 +39,7 @@ class GraphReader {
     }
 
     private GNode newNodeAtRandomLocation(String lbl) {
-        var n = new GNode(lbl);
+        var n = GNode.of(lbl);
         n.setXY(10 + 380 * random(),10 + 380 * random());
         return n;
     }
