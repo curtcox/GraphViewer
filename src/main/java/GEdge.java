@@ -80,7 +80,7 @@ final class GEdge {
     }
 
     public String toString() {
-        return from.label + " / " + to.label;
+        return from.label + " > " + to.label;
     }
 
 }

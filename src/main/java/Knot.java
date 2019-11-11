@@ -37,4 +37,13 @@ final class Knot {
         return cycles.isEmpty();
     }
 
+    public int hashCode() { return cycles.hashCode(); }
+    public boolean equals(Object o) {
+        var that = (Knot) o;
+        return cycles.equals(that.cycles);
+    }
+
+    public String toString() {
+        return "knot(" + cycles + ")";
+    }
 }
