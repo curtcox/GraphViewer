@@ -26,4 +26,8 @@ final class Chain {
     boolean addingWouldMakeCycleWithTail(GNode node) {
         return path.size() > 1 && path.subList(1,path.size()).contains(node);
     }
+
+    public String toString() {
+        return "chain (" + path + ")";
+    }
 }

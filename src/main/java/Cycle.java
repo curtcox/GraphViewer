@@ -9,7 +9,8 @@ final class Cycle {
         this.nodes = nodes;
     }
 
-    static Cycle of(Set<GNode> nodes) {
+    static Cycle of(Collection<GNode> collection) {
+        var nodes = new HashSet<>(collection);
         if (cycles.containsKey(nodes)) {
             return cycles.get(nodes);
         }

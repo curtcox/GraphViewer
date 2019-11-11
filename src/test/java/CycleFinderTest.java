@@ -42,6 +42,14 @@ public class CycleFinderTest {
     @Test
     public void cycle_of_3_marked_as_cycle() {
         var graph = graph("ab bc ca");
+        var a = node("a",graph);
+        var b = node("b",graph);
+        var c = node("c",graph);
+        var cycles = new HashSet<Cycle>();
+        cycles.add(cycle(a,b,c));
+        var knot = Knot.of(cycles);
+        assertEquals(knot,a.knot);
+
         assertInCycle("a",graph);
         assertInCycle("b",graph);
         assertInCycle("c",graph);
