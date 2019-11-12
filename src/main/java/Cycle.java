@@ -20,11 +20,5 @@ final class Cycle {
         return cycle;
     }
 
-    public int hashCode() { return nodes.hashCode(); }
-    public boolean equals(Object o) {
-        var that = (Cycle) o;
-        return nodes.equals(that.nodes);
-    }
-
     public String toString() { return "cycle(" + nodes + ")"; }
 }

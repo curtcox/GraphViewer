@@ -115,9 +115,4 @@ final class GNode {
         return label;
     }
 
-    public int hashCode() { return label.hashCode(); }
-    public boolean equals(Object o) {
-        GNode that = (GNode) o;
-        return label.equals(that.label);
-    }
 }
