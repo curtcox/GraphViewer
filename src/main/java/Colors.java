@@ -24,6 +24,6 @@ final class Colors {
     };
 
     static Color unique(int number) {
-        return uniques[number];
+        return uniques[number % uniques.length];
     }
 }
