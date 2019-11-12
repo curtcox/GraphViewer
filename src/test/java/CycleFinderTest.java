@@ -56,6 +56,36 @@ public class CycleFinderTest {
     }
 
     @Test
+    public void node_in_2_cycles() {
+        var graph = graph("ab ba bc cb");
+        var a = node("a",graph);
+        var b = node("b",graph);
+        var c = node("c",graph);
+        var knot = b.knot;
+
+        var message = knot + " in " + graph;
+        assertEquals(message,2,knot.cycles.size());
+        assertTrue(knot.cycles.contains(cycle(a,b)));
+        assertTrue(knot.cycles.contains(cycle(b,c)));
+    }
+
+    @Test
+    public void node_in_3_cycles() {
+        var graph = graph("ab ba bc cb bd db");
+        var a = node("a",graph);
+        var b = node("b",graph);
+        var c = node("c",graph);
+        var d = node("d",graph);
+        var knot = b.knot;
+
+        var message = knot + " in " + graph;
+        assertEquals(message,3,knot.cycles.size());
+        assertTrue(knot.cycles.contains(cycle(a,b)));
+        assertTrue(knot.cycles.contains(cycle(b,c)));
+        assertTrue(knot.cycles.contains(cycle(b,d)));
+    }
+
+    @Test
     public void cycles_that_share_a_node_marked_as_one_knot() {
         var graph = graph("ab ba bc cb");
         var a = node("a",graph);
@@ -68,8 +98,6 @@ public class CycleFinderTest {
         assertSame(knot,a.knot);
         assertSame(knot,b.knot);
         assertSame(knot,c.knot);
-        assertTrue(knot.cycles.contains(cycle(a,b)));
-        assertTrue(knot.cycles.contains(cycle(b,c)));
     }
 
     private Cycle cycle(GNode... nodes) {

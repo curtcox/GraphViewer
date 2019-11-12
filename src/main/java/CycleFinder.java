@@ -21,41 +21,51 @@ final class CycleFinder {
         var cycles = new HashSet<Cycle>();
         for (var chain : descendantsOf(node)) {
             if (chain.isCycle()) {
-                cycles.add(Cycle.of(new HashSet(chain.path)));
+                cycles.add(Cycle.of(chain.path));
             }
         }
+        println("Cycles of " + node +" are " + cycles);
         return cycles;
     }
 
     private Set<Chain> descendantsOf(final GNode root) {
-        var chains = new HashMap<GNode,Chain>(); // end node -> chain
-        var todo = new HashSet<GNode>();
-        todo.add(root);
-        chains.put(root,Chain.EMPTY.plus(root));
+        println(root + " descendants");
+        var chains = new HashSet<Chain>();
+        var todo = new HashSet<Chain>();
+        var chain = Chain.EMPTY.plus(root);
+        todo.add(chain);
         while (!todo.isEmpty()) {
-            GNode current = todo.iterator().next();
-            todo.remove(current);
-            var chain = chains.get(current);
-            for (var child : childrenOf(current)) {
+            chain = todo.iterator().next();
+            todo.remove(chain);
+            GNode tail = chain.lastNode();
+            for (var child : childrenOf(tail)) {
+                println(root + ": " + chain + " ->?" + child);
                 if (chain.addingWouldMakeCompleteCycle(child)) {
-                    chains.put(child,chain.plus(child));
+                    chains.add(chain.plus(child));
+                    println("addingWouldMakeCompleteCycle -> " + chains);
                 } else if (!chain.addingWouldMakeCycleWithTail(child)) {
-                    chains.put(child,chain.plus(child));
-                    todo.add(child);
+                    var next = chain.plus(child);
+                    chains.add(next);
+                    println("!addingWouldMakeCycleWithTail -> " + chains);
+                    todo.add(next);
+                } else {
+                    println(root + ": Not adding " + child + " to " + chain);
                 }
             }
         }
-        return new HashSet<>(chains.values());
+        println(root + ": descendants are " + chains);
+        return chains;
     }
 
-    private Set<GNode> childrenOf(GNode node) {
-        var all = new HashSet<GNode>();
+    private Set<GNode> childrenOf(GNode parent) {
+        var children = new HashSet<GNode>();
         for (GNode other : nodes()) {
-            if (isChildOf(other,node)) {
-                all.add(other);
+            if (isChildOf(other,parent)) {
+                children.add(other);
             }
         }
-        return all;
+        println(parent + " children are " + children);
+        return children;
     }
 
     private boolean isChildOf(GNode other, GNode node) {
@@ -67,4 +77,7 @@ final class CycleFinder {
         return false;
     }
 
+    static void println(String s) {
+
+    }
 }

@@ -42,4 +42,12 @@ public class ChainTest {
         assertFalse(chain.addingWouldMakeCycleWithTail(node(1)));
     }
 
+    @Test
+    public void addingWouldMakeCycleWithTail_true_when_readding_2nd_of_2() {
+        var chain = empty.plus(node(0)).plus(node(1));
+        assertFalse(chain.addingWouldMakeCycleWithTail(node(0)));
+        assertFalse(chain.addingWouldMakeCycleWithTail(node(2)));
+        assertTrue(chain.addingWouldMakeCycleWithTail(node(1)));
+    }
+
 }
