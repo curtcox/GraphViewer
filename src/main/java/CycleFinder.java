@@ -12,6 +12,23 @@ final class CycleFinder {
     GNode[] nodes() { return graph.nodes(); }
 
     void markCycles() {
+        markCyclesBasedOnNodeOfOrigin();
+        combineKnots();
+    }
+
+    void combineKnots() {
+        for (var n1 : nodes()) {
+            for (var n2 : nodes()) {
+                if (n1.knot.containsAnyCyclesFrom(n2.knot)) {
+                     var combined = n1.knot.combinedWith(n2.knot);
+                     n1.knot = combined;
+                     n2.knot = combined;
+                }
+            }
+        }
+    }
+
+    void markCyclesBasedOnNodeOfOrigin() {
         int done = 0;
         for (var node : nodes()) {
             println(done + " of " + nodes().length);

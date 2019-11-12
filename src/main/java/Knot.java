@@ -37,6 +37,26 @@ final class Knot {
         return cycles.isEmpty();
     }
 
+    boolean containsAnyCyclesFrom(Knot knot) {
+        return !intersection(cycles,knot.cycles).isEmpty();
+    }
+
+    Knot combinedWith(Knot knot) {
+        return Knot.of(union(cycles,knot.cycles));
+    }
+
+    static private Set<Cycle> union(Set<Cycle> a, Set<Cycle> b) {
+        var all = new HashSet<>(a);
+        all.addAll(b);
+        return all;
+    }
+
+    static private Set<Cycle> intersection(Set<Cycle> a, Set<Cycle> b) {
+        var all = new HashSet<>(a);
+        all.retainAll(b);
+        return all;
+    }
+
     public int hashCode() { return cycles.hashCode(); }
     public boolean equals(Object o) {
         var that = (Knot) o;

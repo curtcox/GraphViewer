@@ -130,7 +130,8 @@ public class CycleFinderTest {
         var c = node("c",graph);
         var d = node("d",graph);
 
-        assertEquals(1,a.knot.cycles.size());
+        var message = "knot " + a.knot;
+        assertEquals(message,1,a.knot.cycles.size());
         assertTrue(a.knot.cycles.contains(cycle(a,b)));
         assertEquals(a.knot,b.knot);
 
@@ -140,6 +141,36 @@ public class CycleFinderTest {
         assertEquals(1,c.knot.cycles.size());
         assertTrue(c.knot.cycles.contains(cycle(c,d)));
         assertEquals(c.knot,d.knot);
+    }
+
+    @Test
+    public void cycles_that_do_NOT_share_a_node_marked_as_3_knots() {
+        var graph = graph("ab ba cd dc ef fe");
+        var a = node("a",graph);
+        var b = node("b",graph);
+        var c = node("c",graph);
+        var d = node("d",graph);
+        var e = node("e",graph);
+        var f = node("f",graph);
+
+        var message = "knot " + a.knot;
+        assertEquals(message,1,a.knot.cycles.size());
+        assertTrue(a.knot.cycles.contains(cycle(a,b)));
+        assertEquals(a.knot,b.knot);
+
+        assertNotEquals(a.knot,c.knot);
+        assertNotEquals(a.knot,d.knot);
+        assertNotEquals(a.knot,e.knot);
+        assertNotEquals(a.knot,f.knot);
+
+        assertEquals(1,c.knot.cycles.size());
+        assertEquals(1,d.knot.cycles.size());
+        assertEquals(1,e.knot.cycles.size());
+        assertEquals(1,f.knot.cycles.size());
+        assertTrue(c.knot.cycles.contains(cycle(c,d)));
+        assertEquals(c.knot,d.knot);
+        assertTrue(e.knot.cycles.contains(cycle(e,f)));
+        assertEquals(e.knot,f.knot);
     }
 
     private GNode node(String name, Graph graph) {
