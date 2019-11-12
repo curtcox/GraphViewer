@@ -41,6 +41,14 @@ final class Chain {
         return path.size() > 1 && path.subList(1,path.size()).contains(node);
     }
 
+    boolean isCompleteCycle() {
+        return path.size() > 1 && path.get(0).equals(lastNode());
+    }
+
+    boolean isCycleWithTail() {
+        return path.size() > 2 && path.subList(1,path.size() - 1).contains(lastNode());
+    }
+
     public String toString() {
         return "chain (" + path + ")";
     }

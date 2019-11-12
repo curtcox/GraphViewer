@@ -12,25 +12,16 @@ final class CycleFinder {
     GNode[] nodes() { return graph.nodes(); }
 
     void markCycles() {
+        int done = 0;
         for (var node : nodes()) {
+            println(done + " of " + nodes().length);
             node.knot = Knot.of(cyclesContainingNode(node));
+            done++;
         }
     }
 
-    private Set<Cycle> cyclesContainingNode(GNode node) {
+    private Set<Cycle> cyclesContainingNode(final GNode root) {
         var cycles = new HashSet<Cycle>();
-        for (var chain : descendantsOf(node)) {
-            if (chain.isCycle()) {
-                cycles.add(Cycle.of(chain.path));
-            }
-        }
-        println("Cycles of " + node +" are " + cycles);
-        return cycles;
-    }
-
-    private Set<Chain> descendantsOf(final GNode root) {
-        println(root + " descendants");
-        var chains = new HashSet<Chain>();
         var todo = new HashSet<Chain>();
         var chain = Chain.EMPTY.plus(root);
         todo.add(chain);
@@ -39,32 +30,35 @@ final class CycleFinder {
             todo.remove(chain);
             GNode tail = chain.lastNode();
             for (var child : childrenOf(tail)) {
-                println(root + ": " + chain + " ->?" + child);
-                if (chain.addingWouldMakeCompleteCycle(child)) {
-                    chains.add(chain.plus(child));
-                    println("addingWouldMakeCompleteCycle -> " + chains);
-                } else if (!chain.addingWouldMakeCycleWithTail(child)) {
-                    var next = chain.plus(child);
-                    chains.add(next);
-                    println("!addingWouldMakeCycleWithTail -> " + chains);
-                    todo.add(next);
+                var next = chain.plus(child);
+                if (next.isCompleteCycle()) {
+                    cycles.add(Cycle.of(next.path));
+                } else if (next.isCycleWithTail()) {
                 } else {
-                    println(root + ": Not adding " + child + " to " + chain);
+                    todo.add(next);
                 }
             }
         }
-        println(root + ": descendants are " + chains);
-        return chains;
+        return cycles;
     }
 
+    private Map<GNode,Set<GNode>> childrenOfCache = new HashMap<>();
     private Set<GNode> childrenOf(GNode parent) {
+        if (childrenOfCache.containsKey(parent)) {
+            return childrenOfCache.get(parent);
+        }
+        var children = childrenOf0(parent);
+        childrenOfCache.put(parent,children);
+        return children;
+    }
+
+    private Set<GNode> childrenOf0(GNode parent) {
         var children = new HashSet<GNode>();
         for (GNode other : nodes()) {
             if (isChildOf(other,parent)) {
                 children.add(other);
             }
         }
-        println(parent + " children are " + children);
         return children;
     }
 
@@ -78,6 +72,6 @@ final class CycleFinder {
     }
 
     static void println(String s) {
-
+        System.out.println(s);
     }
 }
