@@ -76,7 +76,9 @@ class GraphPainter {
     }
 
     private String stats() {
-        return graph.nodeCount()  + " / " +
+
+        return graph.knotCount()  + " / " +
+            graph.nodeCount()     + " / " +
             graph.edgeCount()     + " / " +
             graph.crossingCount() + " / " +
             overlapCount();
@@ -87,18 +89,27 @@ class GraphPainter {
     }
 
     private void setColor(Graphics g, GNode n) {
-        var color = n.fixed ? Colors.fixedColor : Colors.nodeColor;
-        if (n==pick) {
-            color = Colors.selectColor;
-        }
-        if (n.isInCycle()) {
-            color = color(n.knot);
-        }
-        g.setColor(color);
+        g.setColor(nodeColor(n));
+    }
+
+    private void setSelection(GNode pick) {
+        this.pick = pick;
+    }
+
+    boolean isSelected(GNode n) { return n == pick; }
+    boolean isInSelectedKnot(GNode n) {
+        return pick != null && pick.knot.contains(n);
+    }
+
+    private Color nodeColor(GNode n) {
+        if (isSelected(n))        { return Colors.selectedNode;  }
+        if (isInSelectedKnot(n))  { return Colors.selectedKnot; }
+        if (n.isInCycle())        { return color(n.knot); }
+        return n.fixed ? Colors.fixed : Colors.ordinary;
     }
 
     void update(Graphics g,GNode pick,boolean stress,boolean xray) {
-        this.pick = pick;
+        setSelection(pick);
         updateOffscreenGraphics();
         drawEdges(stress);
         drawNodes(xray);

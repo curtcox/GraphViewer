@@ -2,9 +2,10 @@ import java.awt.*;
 
 final class Colors {
 
-    static final Color nodeColor = Color.orange;
-    static final Color fixedColor = Color.darkGray;
-    static final Color selectColor = Color.pink;
+    static final Color ordinary      = new Color(255,255,255);
+    static final Color fixed         = new Color(0,0,0);
+    static final Color selectedNode  = new Color(255,0,0);
+    static final Color selectedKnot  = new Color(255,200,200);
 
     static final Color[] uniques = new Color[] {
             new Color(0,255,255),

@@ -20,5 +20,10 @@ final class Cycle {
         return cycle;
     }
 
+    boolean contains(GNode n) {
+        return nodes.contains(n);
+    }
+
     public String toString() { return "cycle(" + nodes + ")"; }
+
 }

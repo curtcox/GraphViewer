@@ -13,7 +13,18 @@ final class Graph {
 
     GEdge[] edges() { return edges; }
     GNode[] nodes() { return nodes; }
+    Knot[]  knots() {
+        var knots = new ArrayList<Knot>();
+        for (var n : nodes) {
+            var knot = n.knot;
+            if (!knots.contains(knot)) {
+                knots.add(knot);
+            }
+        }
+        return knots.toArray(new Knot[0]);
+    }
     int nodeCount() { return nodes.length; }
+    int knotCount() { return knots().length; }
     int edgeCount() { return edges.length; }
     int crossingCount() {
         int count = 0;

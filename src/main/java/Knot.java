@@ -28,6 +28,15 @@ final class Knot {
         return knot;
     }
 
+    boolean contains(GNode n) {
+        for (var cycle : cycles) {
+            if (cycle.contains(n)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     static boolean isSimplePair(Set<Cycle> cycles) {
         return  cycles.size() == 1 &&
                 cycles.iterator().next().nodes.size() == 2;
@@ -66,4 +75,5 @@ final class Knot {
     public String toString() {
         return "knot(" + cycles + ")";
     }
+
 }
