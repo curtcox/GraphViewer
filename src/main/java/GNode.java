@@ -1,6 +1,5 @@
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.Math.*;
 
@@ -9,8 +8,9 @@ final class GNode {
     XY xy;
     XY delta = new XY();
     boolean fixed;
-    final String label;
     Knot knot;
+
+    final String label;
 
     private static final Map<String,GNode> nodes = new HashMap<>();
 

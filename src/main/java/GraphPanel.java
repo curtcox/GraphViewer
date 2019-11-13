@@ -4,7 +4,6 @@ import java.awt.event.*;
 
 class GraphPanel extends JPanel {
 
-    Graph graph;
     boolean stress;
     boolean relax;
     boolean solve;
@@ -13,6 +12,9 @@ class GraphPanel extends JPanel {
     private GNode pick;
     private boolean pickfixed;
     private GraphPainter painter;
+    private Graph graph;
+    private Graph nodesGraph;
+    private Graph knotsGraph;
 
     class GraphMouseAdapter extends MouseAdapter {
         @Override
@@ -89,14 +91,42 @@ class GraphPanel extends JPanel {
         repaint();
     }
 
+    void setKnots(boolean knots) {
+        if (knots) {
+            switchToKnots();
+        } else {
+            switchToNodes();
+        }
+    }
+
+    private void switchToNodes() {
+        graph = nodesGraph;
+        createPainter();
+    }
+
+    private void switchToKnots() {
+        graph = knotsGraph;
+        createPainter();
+    }
+
+    void setGraphs(Graph nodesGraph, Graph knotsGraph) {
+        this.nodesGraph = nodesGraph;
+        this.knotsGraph = knotsGraph;
+        graph = nodesGraph;
+    }
+
     @Override
     public void paint(Graphics g) {
         painter.update(g,pick,stress,xray);
     }
 
+    void createPainter() {
+        painter = new GraphPainter(graph,this);
+    }
+
     public void start() {
         println("Start");
-        painter = new GraphPainter(graph,this);
+        createPainter();
         new Timer(25, evt -> advance()).start();
     }
 
