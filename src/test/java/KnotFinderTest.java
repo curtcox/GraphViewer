@@ -4,7 +4,7 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
-public class CycleFinderTest {
+public class KnotFinderTest {
 
     @Test
     public void can_create() {
