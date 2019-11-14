@@ -1,5 +1,8 @@
 import java.util.*;
 
+/**
+ * A set of digraph nodes where every node is reachable by every other node.
+ */
 final class Knot {
 
     final Set<Cycle> cycles;

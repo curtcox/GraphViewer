@@ -1,10 +1,10 @@
 import java.util.*;
 
-final class CycleFinder {
+final class KnotFinder {
 
     final Graph graph;
 
-    CycleFinder(Graph graph) {
+    KnotFinder(Graph graph) {
         this.graph = graph;
     }
 
