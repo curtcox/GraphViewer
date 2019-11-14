@@ -38,7 +38,7 @@ final class Graph {
         return count;
     }
 
-    void markCycles()          { new CycleFinder(this).markCycles(); }
+    void markCycles()          { new CycleFinder(this).markKnots(); }
     void relax(Dimension size) { new Relaxer(this).relax(size); }
     void solve(GraphPainter painter, Dimension size) {
         new Solver(this).solve(painter,size);

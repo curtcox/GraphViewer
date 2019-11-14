@@ -17,9 +17,7 @@ class GraphReader {
     Graph read() {
         addEdges();
         addCenter();
-        var graph = new Graph(edges,nodes);
-        graph.markCycles();
-        return graph;
+        return new Graph(edges,nodes);
     }
 
     private GNode findNodeFromLabel(String lbl) {

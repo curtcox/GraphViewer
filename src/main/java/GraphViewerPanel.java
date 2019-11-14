@@ -41,7 +41,9 @@ class GraphViewerPanel extends JPanel {
 
     void start() {
         var graph = reader.read();
-        panel.setGraphs(graph,graph);
+        graph.markCycles();
+        var knots = KnotGraphConstructor.makeFrom(graph);
+        panel.setGraphs(graph,knots);
         panel.start();
     }
 
