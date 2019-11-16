@@ -38,10 +38,10 @@ final class Graph {
         return count;
     }
 
-    void markCycles()          { new KnotFinder(this).markKnots(); }
+    void markCycles()          { KnotFinder.find(this); }
     void relax(Dimension size) { new Relaxer(this).relax(size); }
     void solve(GraphPainter painter, Dimension size) {
-        new Solver(this).solve(painter,size);
+        Solver.solve(this,painter,size);
     }
 
     void scramble(Dimension size) { GNode.scramble(nodes,size); }

@@ -104,7 +104,7 @@ class GraphPainter {
     private Color nodeColor(GNode n) {
         if (isSelected(n))        { return Colors.selectedNode;  }
         if (isInSelectedKnot(n))  { return Colors.selectedKnot; }
-        if (n.isInCycle())        { return color(n.knot); }
+        if (n.isInKnotWithMultipleNodes())        { return color(n.knot); }
         return n.fixed ? Colors.fixed : Colors.ordinary;
     }
 

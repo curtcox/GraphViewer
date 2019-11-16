@@ -8,7 +8,7 @@ public class KnotFinderTest {
 
     @Test
     public void can_create() {
-        new KnotFinder(new Graph(new GEdge[0],new GNode[0]));
+        KnotFinder.find(new Graph(new GEdge[0],new GNode[0]));
     }
 
     static Graph graph(String s) {
@@ -19,58 +19,49 @@ public class KnotFinderTest {
         }
         var center = "a";
         var reader = new GraphReader(edges.toArray(new String[0]),center);
-        return reader.read();
+        var graph = reader.read();
+        KnotFinder.find(graph);
+        return graph;
     }
 
     @Test
-    public void line_not_marked_as_cycle() {
+    public void line_not_marked_as_knot() {
         var graph = graph("ab bc cd de");
         var nodes = graph.nodes();
         assertEquals(5,nodes.length);
         for (GNode node : nodes) {
-            assertFalse(node.isInCycle());
+            assertFalse(node.isInKnotWithMultipleNodes());
         }
     }
 
     @Test
-    public void cycle_of_2_marked_as_cycle() {
+    public void knot_of_2_marked_as_knot() {
         var graph = graph("ab ba");
-        assertInCycle("a",graph);
-        assertInCycle("b",graph);
+        var a = node("a",graph);
+        var b = node("b",graph);
+        var knot = Knot.of(nodes(a,b));
+        assertEquals(knot,a.knot);
     }
 
     @Test
-    public void cycle_of_3_marked_as_cycle() {
+    public void cycle_of_3_marked_as_knot() {
         var graph = graph("ab bc ca");
         var a = node("a",graph);
         var b = node("b",graph);
         var c = node("c",graph);
-        var cycles = new HashSet<Cycle>();
-        cycles.add(cycle(a,b,c));
-        var knot = Knot.of(cycles);
+        var knot = Knot.of(nodes(a,b,c));
         assertEquals(knot,a.knot);
-
-        assertInCycle("a",graph);
-        assertInCycle("b",graph);
-        assertInCycle("c",graph);
     }
 
     @Test
-    public void cycle_of_4_marked_as_cycle() {
+    public void cycle_of_4_marked_as_knot() {
         var graph = graph("ab bc cd da");
         var a = node("a",graph);
         var b = node("b",graph);
         var c = node("c",graph);
         var d = node("d",graph);
-        var cycles = new HashSet<Cycle>();
-        cycles.add(cycle(a,b,c,d));
-        var knot = Knot.of(cycles);
+        var knot = Knot.of(nodes(a,b,c,d));
         assertEquals(knot,a.knot);
-
-        assertInCycle("a",graph);
-        assertInCycle("b",graph);
-        assertInCycle("c",graph);
-        assertInCycle("d",graph);
     }
 
     @Test
@@ -79,12 +70,8 @@ public class KnotFinderTest {
         var a = node("a",graph);
         var b = node("b",graph);
         var c = node("c",graph);
-        var knot = b.knot;
-
-        var message = knot + " in " + graph;
-        assertEquals(message,2,knot.cycles.size());
-        assertTrue(knot.cycles.contains(cycle(a,b)));
-        assertTrue(knot.cycles.contains(cycle(b,c)));
+        var knot = Knot.of(nodes(a,b,c));
+        assertEquals(knot,a.knot);
     }
 
     @Test
@@ -94,13 +81,8 @@ public class KnotFinderTest {
         var b = node("b",graph);
         var c = node("c",graph);
         var d = node("d",graph);
-        var knot = b.knot;
-
-        var message = knot + " in " + graph;
-        assertEquals(message,3,knot.cycles.size());
-        assertTrue(knot.cycles.contains(cycle(a,b)));
-        assertTrue(knot.cycles.contains(cycle(b,c)));
-        assertTrue(knot.cycles.contains(cycle(b,d)));
+        var knot = Knot.of(nodes(a,b,c,d));
+        assertEquals(knot,a.knot);
     }
 
     @Test
@@ -112,14 +94,14 @@ public class KnotFinderTest {
         var knot = b.knot;
 
         var message = knot + " in " + graph;
-        assertEquals(message,2,knot.cycles.size());
+        assertEquals(message,3,knot.size());
         assertSame(knot,a.knot);
         assertSame(knot,b.knot);
         assertSame(knot,c.knot);
     }
 
-    private Cycle cycle(GNode... nodes) {
-        return Cycle.of(new HashSet<>(Arrays.asList(nodes)));
+    private Set<GNode> nodes(GNode... nodes) {
+        return new HashSet<>(Arrays.asList(nodes));
     }
 
     @Test
@@ -131,15 +113,17 @@ public class KnotFinderTest {
         var d = node("d",graph);
 
         var message = "knot " + a.knot;
-        assertEquals(message,1,a.knot.cycles.size());
-        assertTrue(a.knot.cycles.contains(cycle(a,b)));
+        assertEquals(message,2,a.knot.size());
+        assertTrue(a.knot.contains(a));
+        assertTrue(a.knot.contains(b));
         assertEquals(a.knot,b.knot);
 
         assertNotEquals(a.knot,c.knot);
         assertNotEquals(a.knot,d.knot);
 
-        assertEquals(1,c.knot.cycles.size());
-        assertTrue(c.knot.cycles.contains(cycle(c,d)));
+        assertEquals(2,c.knot.size());
+        assertTrue(c.knot.contains(c));
+        assertTrue(c.knot.contains(d));
         assertEquals(c.knot,d.knot);
     }
 
@@ -154,8 +138,9 @@ public class KnotFinderTest {
         var f = node("f",graph);
 
         var message = "knot " + a.knot;
-        assertEquals(message,1,a.knot.cycles.size());
-        assertTrue(a.knot.cycles.contains(cycle(a,b)));
+        assertEquals(message,2,a.knot.size());
+        assertTrue(a.knot.contains(a));
+        assertTrue(a.knot.contains(b));
         assertEquals(a.knot,b.knot);
 
         assertNotEquals(a.knot,c.knot);
@@ -163,13 +148,15 @@ public class KnotFinderTest {
         assertNotEquals(a.knot,e.knot);
         assertNotEquals(a.knot,f.knot);
 
-        assertEquals(1,c.knot.cycles.size());
-        assertEquals(1,d.knot.cycles.size());
-        assertEquals(1,e.knot.cycles.size());
-        assertEquals(1,f.knot.cycles.size());
-        assertTrue(c.knot.cycles.contains(cycle(c,d)));
+        assertEquals(2,c.knot.size());
+        assertEquals(2,d.knot.size());
+        assertEquals(2,e.knot.size());
+        assertEquals(2,f.knot.size());
+        assertTrue(c.knot.contains(c));
+        assertTrue(c.knot.contains(d));
         assertEquals(c.knot,d.knot);
-        assertTrue(e.knot.cycles.contains(cycle(e,f)));
+        assertTrue(e.knot.contains(e));
+        assertTrue(e.knot.contains(f));
         assertEquals(e.knot,f.knot);
     }
 
@@ -180,10 +167,6 @@ public class KnotFinderTest {
             }
         }
         return null;
-    }
-
-    private void assertInCycle(String name, Graph graph) {
-        assertTrue(node(name,graph).isInCycle());
     }
 
 }

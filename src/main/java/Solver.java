@@ -5,8 +5,12 @@ final class Solver {
 
     final Graph graph;
 
-    Solver(Graph graph) {
+    private Solver(Graph graph) {
         this.graph = graph;
+    }
+
+    static void solve(Graph graph,GraphPainter painter, Dimension size) {
+        new Solver(graph).solve(painter,size);
     }
 
     GNode[] nodes() { return graph.nodes(); }

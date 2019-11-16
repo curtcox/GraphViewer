@@ -3,80 +3,75 @@ import java.util.*;
 final class KnotFinder {
 
     final Graph graph;
+    final Map<GNode,Set<GNode>> reachable = new HashMap<>();
 
-    KnotFinder(Graph graph) {
+    private KnotFinder(Graph graph) {
         this.graph = graph;
     }
 
     GEdge[] edges() { return graph.edges(); }
     GNode[] nodes() { return graph.nodes(); }
 
+    static void find(Graph graph) {
+        var finder = new KnotFinder(graph);
+        finder.findReachable();
+        finder.markKnots();
+    }
+
     void markKnots() {
-        markCyclesBasedOnNodeOfOrigin();
-        combineKnots();
-    }
-
-    private void combineKnots() {
-        for (var n1 : nodes()) {
-            for (var n2 : nodes()) {
-                if (n1.knot.containsAnyCyclesFrom(n2.knot)) {
-                     var combined = n1.knot.combinedWith(n2.knot);
-                     n1.knot = combined;
-                     n2.knot = combined;
+        for (var a : graph.nodes()) {
+            var fromA = reachable.get(a);
+            var knot = new HashSet<GNode>();
+            knot.add(a);
+            for (var b : fromA) {
+                if (reachable.get(b).contains(a)) {
+                    knot.add(b);
                 }
             }
+            a.knot = Knot.of(knot);
         }
     }
 
-    private void markCyclesBasedOnNodeOfOrigin() {
-        int done = 0;
-        for (var node : nodes()) {
-            println(done + " of " + nodes().length);
-            node.knot = Knot.of(cyclesContainingNode(node));
-            done++;
+    void findReachable() {
+        for (var n : graph.nodes()) {
+            findReachable(n);
         }
     }
 
-    private Set<Cycle> cyclesContainingNode(final GNode root) {
-        var cycles = new HashSet<Cycle>();
-        var todo = new HashSet<Chain>();
-        var chain = Chain.EMPTY.plus(root);
-        todo.add(chain);
+    void findReachable(GNode root) {
+        var descendants = new HashSet<GNode>();
+        var todo = new LinkedList<GNode>();
+        var done = new HashSet<GNode>();
+        todo.add(root);
         while (!todo.isEmpty()) {
-            chain = todo.iterator().next();
-            todo.remove(chain);
-            GNode tail = chain.lastNode();
-            for (var child : childrenOf(tail)) {
-                var next = chain.plus(child);
-                if (next.isCompleteCycle()) {
-                    cycles.add(Cycle.of(next.path));
-                } else if (next.isCycleWithTail()) {
-                } else {
-                    todo.add(next);
+            var current = todo.removeFirst();
+            descendants.add(current);
+            done.add(current);
+            for (var child : childrenOf(current)) {
+                if (!done.contains(child)) {
+                    todo.add(child);
                 }
             }
         }
-        return cycles;
+        reachable.put(root,descendants);
     }
 
-    private Map<GNode,Set<GNode>> childrenOfCache = new HashMap<>();
-    private Set<GNode> childrenOf(GNode parent) {
-        if (childrenOfCache.containsKey(parent)) {
-            return childrenOfCache.get(parent);
+    final Map<GNode,Set<GNode>> children = new HashMap<>();
+    private Set<GNode> childrenOf(GNode node) {
+        if (!children.containsKey(node)) {
+            children.put(node,childrenOf0(node));
         }
-        var children = childrenOf0(parent);
-        childrenOfCache.put(parent,children);
-        return children;
+        return children.get(node);
     }
 
-    private Set<GNode> childrenOf0(GNode parent) {
-        var children = new HashSet<GNode>();
+    private Set<GNode> childrenOf0(GNode node) {
+        var all = new HashSet<GNode>();
         for (GNode other : nodes()) {
-            if (isChildOf(other,parent)) {
-                children.add(other);
+            if (isChildOf(other,node)) {
+                all.add(other);
             }
         }
-        return children;
+        return all;
     }
 
     private boolean isChildOf(GNode other, GNode node) {
@@ -88,7 +83,4 @@ final class KnotFinder {
         return false;
     }
 
-    static void println(String s) {
-        System.out.println(s);
-    }
 }

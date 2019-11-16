@@ -2,81 +2,61 @@ import java.util.*;
 
 /**
  * A set of digraph nodes where every node is reachable by every other node.
+ * In other words, the nodes are all strongly connected.
+ * https://algs4.cs.princeton.edu/42digraph/
  */
 final class Knot {
 
-    final Set<Cycle> cycles;
+    final Set<GNode> nodes;
     final int number;
     final static Knot empty = new Knot(new HashSet<>(),0);
-    static final Map<Set<Cycle>,Knot> knots = new HashMap<>();
+    static final Map<Set<GNode>,Knot> knots = new HashMap<>();
     static {
         knots.put(new HashSet<>(),empty);
     }
 
-    private Knot(Set<Cycle> cycles,int number) {
-        this.cycles = cycles;
+    private Knot(Set<GNode> nodes,int number) {
+        this.nodes = nodes;
         this.number = number;
     }
 
-    static Knot of(Set<Cycle> cycles) {
-        if (knots.containsKey(cycles)) {
-            return knots.get(cycles);
+    static Knot of(Set<GNode> nodes) {
+        if (knots.containsKey(nodes)) {
+            return knots.get(nodes);
         }
-        if (isSimplePair(cycles)) {
-            return new Knot(cycles,1);
+        if (isSimplePair(nodes)) {
+            return new Knot(nodes,1);
         }
-        var knot = new Knot(cycles,knots.size() + 2);
-        knots.put(cycles,knot);
-        System.out.println("Knot #" + knots.size() + " contains " + cycles);
+        var knot = new Knot(nodes,knots.size() + 2);
+        knots.put(nodes,knot);
+        System.out.println("Knot #" + knots.size() + " contains " + nodes);
         return knot;
     }
 
     boolean contains(GNode n) {
-        for (var cycle : cycles) {
-            if (cycle.contains(n)) {
-                return true;
-            }
-        }
-        return false;
+        return nodes.contains(n);
     }
 
-    static boolean isSimplePair(Set<Cycle> cycles) {
-        return  cycles.size() == 1 &&
-                cycles.iterator().next().nodes.size() == 2;
+    static boolean isSimplePair(Set<GNode> nodes) {
+        return  nodes.size() == 2;
     }
 
     boolean isEmpty() {
-        return cycles.isEmpty();
+        return nodes.isEmpty();
     }
 
-    boolean containsAnyCyclesFrom(Knot knot) {
-        return !intersection(cycles,knot.cycles).isEmpty();
+    int size() {
+        return nodes.size();
     }
 
-    Knot combinedWith(Knot knot) {
-        return Knot.of(union(cycles,knot.cycles));
-    }
-
-    static private Set<Cycle> union(Set<Cycle> a, Set<Cycle> b) {
-        var all = new HashSet<>(a);
-        all.addAll(b);
-        return all;
-    }
-
-    static private Set<Cycle> intersection(Set<Cycle> a, Set<Cycle> b) {
-        var all = new HashSet<>(a);
-        all.retainAll(b);
-        return all;
-    }
-
-    public int hashCode() { return cycles.hashCode(); }
+    public int hashCode() { return nodes.hashCode(); }
     public boolean equals(Object o) {
         var that = (Knot) o;
-        return cycles.equals(that.cycles);
+        return nodes.equals(that.nodes);
     }
 
     public String toString() {
-        return "knot(" + cycles + ")";
+        return "knot(" + nodes + ")";
     }
 
 }

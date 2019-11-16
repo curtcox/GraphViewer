@@ -31,8 +31,8 @@ final class GNode {
     double y() { return xy.y; }
     void setXY(double x, double y) { this.xy = new XY(x,y); }
 
-    boolean isInCycle() {
-        return !knot.isEmpty();
+    boolean isInKnotWithMultipleNodes() {
+        return knot.size() > 1;
     }
 
     void moveRestrictedTo(Dimension d) {
