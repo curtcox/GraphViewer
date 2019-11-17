@@ -36,7 +36,7 @@ class GraphViewerPanel extends JPanel {
         xray.addActionListener(e -> panel.xray = xray.isSelected());
         relax.addActionListener(e -> panel.relax = relax.isSelected());
         solve.addActionListener(e -> panel.solve = solve.isSelected());
-        solve.addActionListener(e -> panel.setKnots(knots.isSelected()));
+        knots.addActionListener(e -> panel.setKnots(knots.isSelected()));
     }
 
     void start() {

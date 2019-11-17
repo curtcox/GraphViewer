@@ -56,7 +56,7 @@ final class Knot {
     }
 
     public String toString() {
-        return "knot(" + nodes + ")";
+        return "knot(" + new HashSet(nodes) + ")";
     }
 
 }

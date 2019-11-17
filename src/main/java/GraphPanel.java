@@ -8,6 +8,7 @@ class GraphPanel extends JPanel {
     boolean relax;
     boolean solve;
     boolean xray;
+    boolean knots;
     private int numMouseButtonsDown;
     private GNode pick;
     private boolean pickfixed;
@@ -97,6 +98,8 @@ class GraphPanel extends JPanel {
         } else {
             switchToNodes();
         }
+        this.knots = knots;
+        repaint();
     }
 
     private void switchToNodes() {
@@ -140,7 +143,7 @@ class GraphPanel extends JPanel {
         last = now;
         if (relax) { relax(); }
         if (solve) { solve(); }
-        if (relax || solve || dirty(pick,stress,xray)) {
+        if (relax || solve || dirty(pick,stress,xray,knots)) {
             repaint();
         }
     }
@@ -152,11 +155,16 @@ class GraphPanel extends JPanel {
     private GNode lastPick = GNode.of("");
     private boolean lastStress;
     private boolean lastXray;
-    private boolean dirty(GNode pick,boolean stress,boolean xray) {
-        boolean clean = pick == lastPick && stress == lastStress && xray == lastXray;
-        lastPick = pick;
+    private boolean lastKnots;
+    private boolean dirty(GNode pick,boolean stress,boolean xray,boolean knots) {
+        boolean clean = pick   == lastPick &&
+                        stress == lastStress &&
+                        xray   == lastXray &&
+                        knots  == lastKnots;
+        lastPick   = pick;
         lastStress = stress;
-        lastXray = xray;
+        lastXray   = xray;
+        lastKnots  = knots;
         return !clean;
     }
 
