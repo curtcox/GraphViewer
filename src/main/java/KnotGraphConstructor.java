@@ -26,19 +26,22 @@ class KnotGraphConstructor {
     }
 
     private GNode[] nodes() {
-        var knots = new HashSet<GNode>();
-        for (var node : graph.nodes()) {
-            knots.add(node(node));
+        var nodes = new HashSet<GNode>();
+        for (var knot : graph.knots()) {
+            nodes.add(node(knot));
         }
-        return new ArrayList<>(knots).toArray(new GNode[0]);
+        return new ArrayList<>(nodes).toArray(new GNode[0]);
     }
 
-    private GNode node(GNode node) {
-        var knot    = node.knot;
+    private static GNode node(Knot knot) {
         var label   = knot.toString();
         var derived = GNode.of(label);
-        derived.knot = Knot.of(Collections.singleton(node));
-        derived.xy  = node.xy;
+        derived.knot = Knot.of(Collections.singleton(derived));
+        derived.xy  = xy(knot);
         return derived;
+    }
+
+    private static XY xy(Knot knot) {
+        return knot.nodes.iterator().next().xy;
     }
 }
