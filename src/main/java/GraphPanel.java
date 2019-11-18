@@ -14,8 +14,7 @@ class GraphPanel extends JPanel {
     private boolean pickfixed;
     private GraphPainter painter;
     private Graph graph;
-    private Graph nodesGraph;
-    private Graph knotsGraph;
+    private GraphSwitcher switcher;
 
     class GraphMouseAdapter extends MouseAdapter {
         @Override
@@ -93,28 +92,14 @@ class GraphPanel extends JPanel {
     }
 
     void setKnots(boolean knots) {
-        if (knots) {
-            switchToKnots();
-        } else {
-            switchToNodes();
-        }
+        graph = switcher.setKnots(knots);
         this.knots = knots;
+        createPainter();
         repaint();
     }
 
-    private void switchToNodes() {
-        graph = nodesGraph;
-        createPainter();
-    }
-
-    private void switchToKnots() {
-        graph = knotsGraph;
-        createPainter();
-    }
-
     void setGraphs(Graph nodesGraph, Graph knotsGraph) {
-        this.nodesGraph = nodesGraph;
-        this.knotsGraph = knotsGraph;
+        switcher = new GraphSwitcher(nodesGraph,knotsGraph);
         graph = nodesGraph;
     }
 
