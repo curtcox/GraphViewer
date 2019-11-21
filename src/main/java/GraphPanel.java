@@ -98,9 +98,9 @@ class GraphPanel extends JPanel {
         repaint();
     }
 
-    void setGraphs(Graph nodesGraph, Graph knotsGraph) {
-        switcher = new GraphSwitcher(nodesGraph,knotsGraph);
-        graph = nodesGraph;
+    void setGraphs(GraphMap graphMap) {
+        switcher = new GraphSwitcher(graphMap);
+        graph = graphMap.source;
     }
 
     @Override

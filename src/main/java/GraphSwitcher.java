@@ -1,11 +1,9 @@
 final class GraphSwitcher {
 
-    private Graph nodesGraph;
-    private Graph knotsGraph;
+    private final GraphMap map;
 
-    GraphSwitcher(Graph nodesGraph, Graph knotsGraph) {
-        this.nodesGraph = nodesGraph;
-        this.knotsGraph = knotsGraph;
+    GraphSwitcher(GraphMap map) {
+        this.map = map;
     }
 
     Graph setKnots(boolean knots) {
@@ -17,11 +15,33 @@ final class GraphSwitcher {
     }
 
     private Graph switchToNodes() {
-        return nodesGraph;
+        var graph = map.source;
+        for (var knot : graph.knots()) {
+            for (var node : knot.nodes) {
+                node.xy = map.mapping.get(knot).xy;
+            }
+        }
+        return graph;
     }
 
     private Graph switchToKnots() {
-        return knotsGraph;
+        var graph = map.dest;
+        for (var node : graph.nodes()) {
+            var knot = map.inverse.get(node);
+            node.xy = averageXY(knot);
+        }
+        return graph;
+    }
+
+    private XY averageXY(Knot knot) {
+        double x = 0;
+        double y = 0;
+        for (var node : knot.nodes) {
+            x += node.x();
+            y += node.y();
+        }
+        double size = knot.size();
+        return new XY(x/size,y/size);
     }
 
 }

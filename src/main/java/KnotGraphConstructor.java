@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
 
 class KnotGraphConstructor {
 
@@ -10,14 +8,24 @@ class KnotGraphConstructor {
         this.graph = graph;
     }
 
-    static Graph makeFrom(Graph graph) {
+    static GraphMap makeFrom(Graph graph) {
         return new KnotGraphConstructor(graph).make();
     }
 
-    private Graph make() {
-        var nodes = nodes();
+    private GraphMap make() {
+        var mapping = mapKnots();
+        var nodes = mapping.values().toArray(new GNode[0]);
         var edges = edges(nodes);
-        return new Graph(edges,nodes);
+        var dest = new Graph(edges,nodes);
+        return new GraphMap(graph,dest,mapping,inverse(mapping));
+    }
+
+    private Map<GNode, Knot> inverse(Map<Knot, GNode> map) {
+        var inverse = new HashMap<GNode,Knot>();
+        for (var entry : map.entrySet()) {
+            inverse.put(entry.getValue(),entry.getKey());
+        }
+        return inverse;
     }
 
     private GEdge[] edges(GNode[] nodes) {
@@ -25,12 +33,12 @@ class KnotGraphConstructor {
         return new ArrayList<>(edges).toArray(new GEdge[0]);
     }
 
-    private GNode[] nodes() {
-        var nodes = new HashSet<GNode>();
+    private Map<Knot,GNode> mapKnots() {
+        var knots = new HashMap<Knot,GNode>();
         for (var knot : graph.knots()) {
-            nodes.add(node(knot));
+            knots.put(knot,node(knot));
         }
-        return new ArrayList<>(nodes).toArray(new GNode[0]);
+        return knots;
     }
 
     private static GNode node(Knot knot) {
