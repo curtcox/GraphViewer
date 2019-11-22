@@ -15,7 +15,7 @@ class KnotGraphConstructor {
     private GraphMap make() {
         var mapping = mapKnots();
         var nodes = mapping.values().toArray(new GNode[0]);
-        var edges = edges(nodes);
+        var edges = edges(mapping);
         var dest = new Graph(edges,nodes);
         return new GraphMap(graph,dest,mapping,inverse(mapping));
     }
@@ -28,9 +28,16 @@ class KnotGraphConstructor {
         return inverse;
     }
 
-    private GEdge[] edges(GNode[] nodes) {
+    private GEdge[] edges(Map<Knot,GNode> mapping) {
         var edges = new HashSet<GEdge>();
+        for (var edge : graph.edges()) {
+            edges.add(edge(edge,mapping));
+        }
         return new ArrayList<>(edges).toArray(new GEdge[0]);
+    }
+
+    private GEdge edge(GEdge edge, Map<Knot,GNode> mapping) {
+        return new GEdge(mapping.get(edge.from.knot),mapping.get(edge.to.knot),0);
     }
 
     private Map<Knot,GNode> mapKnots() {
