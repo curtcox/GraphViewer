@@ -186,13 +186,21 @@ class GraphPainter {
     }
 
     private void setLineColor(GEdge e) {
+        offGraphics.setColor(color(e));
+    }
+
+    private Color color(GEdge e) {
         if (pick==null) {
-            offGraphics.setColor(Colors.line);
-        } else {
-            offGraphics.setColor(isSelected(e)
-                    ? Colors.selectedLine
-                    : Colors.unselectedLine);
+            return Colors.line;
         }
+        if (isSelected(e)) {
+            return isGoingInto(e,pick) ? Colors.incomingLine : Colors.outgoingLine;
+        }
+        return Colors.unselectedLine;
+    }
+
+    private boolean isGoingInto(GEdge e, GNode pick) {
+        return e.to == pick;
     }
 
     private void drawEdgeLine(int x1, int y1, int x2, int y2) {
