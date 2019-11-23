@@ -10,7 +10,6 @@ final class GraphPanel extends JPanel {
     boolean knots;
     private int numMouseButtonsDown;
     private GNode pick;
-    private boolean pickfixed;
     private GraphPainter painter;
     private Graph graph;
     private GraphSwitcher switcher;
@@ -35,8 +34,6 @@ final class GraphPanel extends JPanel {
 
         void dragNode(GNode node, int x, int y) {
             pick = node;
-            pickfixed = pick.fixed;
-            pick.fixed = true;
             pick.setXY(x,y);
         }
 
@@ -44,7 +41,6 @@ final class GraphPanel extends JPanel {
         public void mouseReleased(MouseEvent e) {
             numMouseButtonsDown--;
 
-            pick.fixed = pickfixed;
             pick.setXY(e.getX(),e.getY());
             if (numMouseButtonsDown == 0) {
                 pick = null;

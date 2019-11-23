@@ -7,7 +7,6 @@ final class GNode {
 
     XY xy;
     XY delta = new XY();
-    boolean fixed;
     Knot knot;
 
     final String label;
@@ -36,9 +35,7 @@ final class GNode {
     }
 
     void moveRestrictedTo(Dimension d) {
-        if (!fixed) {
-            move();
-        }
+        move();
         restrictTo(d);
     }
 
@@ -65,15 +62,11 @@ final class GNode {
     }
 
     private void scramble(Dimension d) {
-        if (!fixed) {
-            setXY(10 + (d.width - 20)  * random(),10 + (d.height - 20) * random());
-        }
+        setXY(10 + (d.width - 20)  * random(),10 + (d.height - 20) * random());
     }
 
     private void shake() {
-        if (!fixed) {
-            xy = xy.plus(new XY(80 * random() - 40,80 * random() - 40));
-        }
+        xy = xy.plus(new XY(80 * random() - 40,80 * random() - 40));
     }
 
     private double squared(double x) {

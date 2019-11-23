@@ -104,8 +104,8 @@ class GraphPainter {
     private Color nodeColor(GNode n) {
         if (isSelected(n))        { return Colors.selectedNode;  }
         if (isInSelectedKnot(n))  { return Colors.selectedKnot; }
-        if (n.isInKnotWithMultipleNodes())        { return color(n.knot); }
-        return n.fixed ? Colors.fixed : Colors.ordinary;
+        if (n.isInKnotWithMultipleNodes()) { return color(n.knot); }
+        return Colors.ordinary;
     }
 
     void update(Graphics g,GNode pick,boolean xray) {
@@ -186,9 +186,13 @@ class GraphPainter {
     }
 
     private void setLineColor(GEdge e) {
-        offGraphics.setColor(isSelected(e)
-                ? Colors.selectedLine
-                : Colors.line);
+        if (pick==null) {
+            offGraphics.setColor(Colors.line);
+        } else {
+            offGraphics.setColor(isSelected(e)
+                    ? Colors.selectedLine
+                    : Colors.unselectedLine);
+        }
     }
 
     private void drawEdgeLine(int x1, int y1, int x2, int y2) {

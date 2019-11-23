@@ -94,7 +94,6 @@ class GraphReader {
         if (center != null) {
             var n = findNodeFromLabel(center);
             n.setXY(500,500);
-            n.fixed = true;
         }
     }
 
