@@ -1,4 +1,3 @@
-import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 import static java.awt.geom.Line2D.linesIntersect;
 
@@ -73,10 +72,6 @@ final class GEdge {
         double dy = dy();
         double actualLength = sqrt(dx * dx + dy * dy);
         return (actualLength == 0) ? .0001 : actualLength;
-    }
-
-    int len() {
-        return (int) abs(actualLength() - desiredLength);
     }
 
     public String toString() {

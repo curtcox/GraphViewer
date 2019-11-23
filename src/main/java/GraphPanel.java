@@ -2,9 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-class GraphPanel extends JPanel {
+final class GraphPanel extends JPanel {
 
-    boolean stress;
     boolean relax;
     boolean solve;
     boolean xray;
@@ -105,7 +104,7 @@ class GraphPanel extends JPanel {
 
     @Override
     public void paint(Graphics g) {
-        painter.update(g,pick,stress,xray);
+        painter.update(g,pick,xray);
     }
 
     void createPainter() {
@@ -128,7 +127,7 @@ class GraphPanel extends JPanel {
         last = now;
         if (relax) { relax(); }
         if (solve) { solve(); }
-        if (relax || solve || dirty(pick,stress,xray,knots)) {
+        if (relax || solve || dirty(pick,xray,knots)) {
             repaint();
         }
     }
@@ -138,16 +137,13 @@ class GraphPanel extends JPanel {
     }
 
     private GNode lastPick = GNode.of("");
-    private boolean lastStress;
     private boolean lastXray;
     private boolean lastKnots;
-    private boolean dirty(GNode pick,boolean stress,boolean xray,boolean knots) {
+    private boolean dirty(GNode pick,boolean xray,boolean knots) {
         boolean clean = pick   == lastPick &&
-                        stress == lastStress &&
                         xray   == lastXray &&
                         knots  == lastKnots;
         lastPick   = pick;
-        lastStress = stress;
         lastXray   = xray;
         lastKnots  = knots;
         return !clean;

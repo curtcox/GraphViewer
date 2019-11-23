@@ -108,10 +108,10 @@ class GraphPainter {
         return n.fixed ? Colors.fixed : Colors.ordinary;
     }
 
-    void update(Graphics g,GNode pick,boolean stress,boolean xray) {
+    void update(Graphics g,GNode pick,boolean xray) {
         setSelection(pick);
         updateOffscreenGraphics();
-        drawEdges(stress);
+        drawEdges();
         drawNodes(xray);
         drawStats();
         g.drawImage(offscreen, 0, 0, null);
@@ -166,35 +166,33 @@ class GraphPainter {
         return count;
     }
 
-    private void drawEdges(boolean stress) {
+    private void drawEdges() {
         for (var e : graph.edges()) {
-            drawEdge(e,stress);
+            drawEdge(e);
         }
     }
 
-    private void drawEdge(GEdge e, boolean stress) {
+    private boolean isSelected(GEdge e) {
+        return e.from == pick || e.to == pick;
+    }
+
+    private void drawEdge(GEdge e) {
         int x1 = (int) e.from.x();
         int y1 = (int) e.from.y();
         int x2 = (int) e.to.x();
         int y2 = (int) e.to.y();
-        int len = e.len();
-        drawEdgeLine(x1,y1,x2,y2,len);
-        if (stress) {
-            labelEdgeStress(x1,y1,x2,y2,len);
-        }
+        setLineColor(e);
+        drawEdgeLine(x1,y1,x2,y2);
     }
 
-    private void drawEdgeLine(int x1, int y1, int x2, int y2, int len) {
-        offGraphics.setColor((len < 10)
-                ? Color.black
-                : (len < 20 ? Color.pink : Color.red));
+    private void setLineColor(GEdge e) {
+        offGraphics.setColor(isSelected(e)
+                ? Colors.selectedLine
+                : Colors.line);
+    }
+
+    private void drawEdgeLine(int x1, int y1, int x2, int y2) {
         offGraphics.drawLine(x1, y1, x2, y2);
-    }
-
-    private void labelEdgeStress(int x1, int y1, int x2, int y2, int len) {
-        String lbl = String.valueOf(len);
-        offGraphics.setColor(Color.darkGray);
-        offGraphics.drawString(lbl, x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2);
     }
 
 }

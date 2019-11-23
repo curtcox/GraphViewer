@@ -7,7 +7,6 @@ class GraphViewerPanel extends JPanel {
     private final JPanel controlPanel = new JPanel();
     private final JButton    scramble = new JButton("Scramble");
     private final JButton       shake = new JButton("Shake");
-    private final JCheckBox    stress = new JCheckBox("Stress");
     private final JCheckBox      xray = new JCheckBox("X-ray");
     private final JCheckBox     relax = new JCheckBox("Relax");
     private final JCheckBox     solve = new JCheckBox("Solve");
@@ -25,14 +24,12 @@ class GraphViewerPanel extends JPanel {
 
         controlPanel.add(scramble);
         controlPanel.add(shake);
-        controlPanel.add(stress);
         controlPanel.add(xray);
         controlPanel.add(relax);
         controlPanel.add(solve);
         controlPanel.add(knots);
         scramble.addActionListener(e -> scramble());
         shake.addActionListener(e -> shake());
-        stress.addActionListener(e -> panel.stress = stress.isSelected());
         xray.addActionListener(e -> panel.xray = xray.isSelected());
         relax.addActionListener(e -> panel.relax = relax.isSelected());
         solve.addActionListener(e -> panel.solve = solve.isSelected());

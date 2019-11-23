@@ -6,6 +6,8 @@ final class Colors {
     static final Color fixed         = new Color(0,0,0);
     static final Color selectedNode  = new Color(255,0,0);
     static final Color selectedKnot  = new Color(255,200,200);
+    static final Color line          = new Color(0,0,0);
+    static final Color selectedLine  = new Color(255,0,255);
 
     static final Color[] uniques = new Color[] {
             new Color(0,255,255),
