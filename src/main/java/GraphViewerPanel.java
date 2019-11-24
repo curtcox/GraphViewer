@@ -3,7 +3,7 @@ import java.awt.*;
 
 class GraphViewerPanel extends JPanel {
 
-    private final GraphPanel   panel = new GraphPanel();
+    private final GraphPanel    panel = GraphPanel.newInstance();
     private final JPanel controlPanel = new JPanel();
     private final JButton    scramble = new JButton("Scramble");
     private final JButton       shake = new JButton("Shake");

@@ -2,7 +2,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-class GraphPainter {
+final class GraphPainter {
 
     private GNode pick;
     private final Graph graph;
