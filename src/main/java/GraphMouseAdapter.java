@@ -44,7 +44,8 @@ final class GraphMouseAdapter extends MouseAdapter {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        over = panel.findNearestNode(XY(e));
+        over = panel.findNodeUnderMouse(XY(e));
+        finish(e);
     }
 
     private void finish(MouseEvent e) {
@@ -62,6 +63,6 @@ final class GraphMouseAdapter extends MouseAdapter {
     }
 
     private static void println(Object o) {
-        System.out.println("" + o);
+        System.out.println("Mouse : " + o);
     }
 }

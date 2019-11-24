@@ -47,15 +47,29 @@ final class Graph {
     void scramble(Dimension size) { GNode.scramble(nodes,size); }
     void shake()                  { GNode.shake(nodes); }
 
+    private static class Nearest {
+        double dist = Double.MAX_VALUE;
+        GNode node;
+    }
+
     GNode findNearestNode(XY xy) {
-        double bestdist = Double.MAX_VALUE;
-        GNode nearest = null;
+        return findNearest(xy).node;
+    }
+
+    private static final int radius = 50;
+    GNode findNodeUnderMouse(XY xy) {
+        var nearest = findNearest(xy);
+        return nearest.dist < radius ? nearest.node : null;
+    }
+
+    private Nearest findNearest(XY xy) {
+        var nearest = new Nearest();
 
         for (var n : nodes) {
             double dist = n.distanceTo(xy);
-            if (dist < bestdist) {
-                nearest = n;
-                bestdist = dist;
+            if (dist < nearest.dist) {
+                nearest.node = n;
+                nearest.dist = dist;
             }
         }
         return nearest;

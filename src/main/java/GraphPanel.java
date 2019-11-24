@@ -27,6 +27,7 @@ final class GraphPanel extends JPanel {
     }
 
     GNode findNearestNode(XY xy) { return graph.findNearestNode(xy); }
+    GNode findNodeUnderMouse(XY xy) { return graph.findNodeUnderMouse(xy); }
 
     private void relax() {
         graph.relax(getSize());
@@ -60,7 +61,7 @@ final class GraphPanel extends JPanel {
 
     @Override
     public void paint(Graphics g) {
-        painter.update(g,mouse.pick,xray);
+        painter.update(g,mouse.over,mouse.pick,xray);
     }
 
     void createPainter() {

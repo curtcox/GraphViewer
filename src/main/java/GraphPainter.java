@@ -4,6 +4,7 @@ import java.util.List;
 
 final class GraphPainter {
 
+    private GNode over;
     private GNode pick;
     private final Graph graph;
     private final GraphPanel panel;
@@ -92,24 +93,21 @@ final class GraphPainter {
         g.setColor(nodeColor(n));
     }
 
-    private void setSelection(GNode pick) {
-        this.pick = pick;
-    }
-
     boolean isSelected(GNode n) { return n == pick; }
     boolean isInSelectedKnot(GNode n) {
         return pick != null && pick.knot.contains(n);
     }
 
     private Color nodeColor(GNode n) {
-        if (isSelected(n))        { return Colors.selectedNode;  }
-        if (isInSelectedKnot(n))  { return Colors.selectedKnot; }
+        if (isSelected(n))                 { return Colors.selectedNode;  }
+        if (isInSelectedKnot(n))           { return Colors.selectedKnot; }
         if (n.isInKnotWithMultipleNodes()) { return color(n.knot); }
         return Colors.ordinary;
     }
 
-    void update(Graphics g,GNode pick,boolean xray) {
-        setSelection(pick);
+    void update(Graphics g,GNode over, GNode pick,boolean xray) {
+        this.over = over;
+        this.pick = pick;
         updateOffscreenGraphics();
         drawEdges();
         drawNodes(xray);
@@ -176,6 +174,10 @@ final class GraphPainter {
         return e.from == pick || e.to == pick;
     }
 
+    private boolean isOver(GEdge e) {
+        return e.from == over || e.to == over;
+    }
+
     private void drawEdge(GEdge e) {
         int x1 = (int) e.from.x();
         int y1 = (int) e.from.y();
@@ -190,11 +192,11 @@ final class GraphPainter {
     }
 
     private Color color(GEdge e) {
-        if (pick==null) {
+        if (over==null) {
             return Colors.line;
         }
-        if (isSelected(e)) {
-            return isGoingInto(e,pick) ? Colors.incomingLine : Colors.outgoingLine;
+        if (isOver(e)) {
+            return isGoingInto(e,over) ? Colors.incomingLine : Colors.outgoingLine;
         }
         return Colors.unselectedLine;
     }
