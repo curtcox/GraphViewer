@@ -74,18 +74,24 @@ final class GraphPanel extends JPanel {
     }
 
     private long last;
-    private void advance() {
+    private void checkSpeed() {
         long now = System.currentTimeMillis();
         long duration = now - last;
         if (duration > 200) {
             println(duration + "ms");
         }
         last = now;
-        if (relax) { relax(); }
-        if (solve) { solve(); }
-        if (relax || solve || dirty(mouse.pick,xray,knots)) {
-            repaint();
-        }
+    }
+
+    private boolean shouldRepaint() {
+        return relax || solve || dirty(mouse.pick,xray,knots);
+    }
+
+    private void advance() {
+        checkSpeed();
+        if (relax)           { relax(); }
+        if (solve)           { solve(); }
+        if (shouldRepaint()) { repaint(); }
     }
 
     private static void println(String s) {
