@@ -47,12 +47,12 @@ final class Graph {
     void scramble(Dimension size) { GNode.scramble(nodes,size); }
     void shake()                  { GNode.shake(nodes); }
 
-    GNode findNearestNode(int x, int y) {
+    GNode findNearestNode(XY xy) {
         double bestdist = Double.MAX_VALUE;
         GNode nearest = null;
 
         for (var n : nodes) {
-            double dist = n.distanceTo(new XY(x,y));
+            double dist = n.distanceTo(xy);
             if (dist < bestdist) {
                 nearest = n;
                 bestdist = dist;

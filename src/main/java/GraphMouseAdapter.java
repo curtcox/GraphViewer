@@ -3,6 +3,7 @@ import java.awt.event.*;
 final class GraphMouseAdapter extends MouseAdapter {
 
     GNode pick;
+    GNode over;
     private int numMouseButtonsDown;
     private GraphPanel panel;
 
@@ -13,21 +14,22 @@ final class GraphMouseAdapter extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent e) {
         numMouseButtonsDown++;
-        int x = e.getX();
-        int y = e.getY();
-        GNode nearest = panel.findNearestNode(x,y);
-        dragNode(nearest,x,y);
+        GNode nearest = panel.findNearestNode(XY(e));
+        dragNode(nearest,XY(e));
         if (rightButton(e)) {
             println(nearest);
         }
         finish(e);
     }
 
+    private static XY XY(MouseEvent e) {
+        return new XY(e.getX(),e.getY());
+    }
+
     @Override
     public void mouseReleased(MouseEvent e) {
         numMouseButtonsDown--;
-
-        pick.setXY(e.getX(),e.getY());
+        pick.setXY(XY(e));
         if (numMouseButtonsDown == 0) {
             pick = null;
         }
@@ -36,8 +38,13 @@ final class GraphMouseAdapter extends MouseAdapter {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        pick.setXY(e.getX(),e.getY());
+        pick.setXY(XY(e));
         finish(e);
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        over = panel.findNearestNode(XY(e));
     }
 
     private void finish(MouseEvent e) {
@@ -49,9 +56,9 @@ final class GraphMouseAdapter extends MouseAdapter {
         return e.getButton() == MouseEvent.BUTTON3;
     }
 
-    private void dragNode(GNode node, int x, int y) {
+    private void dragNode(GNode node, XY xy) {
         pick = node;
-        pick.setXY(x,y);
+        pick.setXY(xy);
     }
 
     private static void println(Object o) {

@@ -38,7 +38,7 @@ class GraphReader {
 
     private GNode newNodeAtRandomLocation(String lbl) {
         var n = GNode.of(lbl);
-        n.setXY(10 + 380 * random(),10 + 380 * random());
+        n.setXY(new XY(10 + 380 * random(),10 + 380 * random()));
         return n;
     }
 
@@ -93,7 +93,7 @@ class GraphReader {
     private void addCenter() {
         if (center != null) {
             var n = findNodeFromLabel(center);
-            n.setXY(500,500);
+            n.setXY(new XY(500,500));
         }
     }
 

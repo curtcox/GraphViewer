@@ -26,7 +26,7 @@ final class GraphPanel extends JPanel {
         addMouseMotionListener(mouse);
     }
 
-    GNode findNearestNode(int x, int y) { return graph.findNearestNode(x,y); }
+    GNode findNearestNode(XY xy) { return graph.findNearestNode(xy); }
 
     private void relax() {
         graph.relax(getSize());

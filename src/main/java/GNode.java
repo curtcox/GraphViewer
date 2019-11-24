@@ -28,7 +28,8 @@ final class GNode {
 
     double x() { return xy.x; }
     double y() { return xy.y; }
-    void setXY(double x, double y) { this.xy = new XY(x,y); }
+    private void setXY(double x, double y) { this.xy = new XY(x,y); }
+    void setXY(XY xy) { this.xy = new XY(xy.x,xy.y); }
 
     boolean isInKnotWithMultipleNodes() {
         return knot.size() > 1;
