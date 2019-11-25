@@ -6,6 +6,7 @@ final class GraphPainter {
 
     private GNode over;
     private GNode pick;
+    private GraphFilter filter = new GraphFilter("");
     private final Graph graph;
     private final GraphPanel panel;
     private final FontMetrics fm;
@@ -77,11 +78,10 @@ final class GraphPainter {
     }
 
     private String stats() {
-
-        return graph.knotCount()  + " / " +
-            graph.nodeCount()     + " / " +
-            graph.edgeCount()     + " / " +
-            graph.crossingCount() + " / " +
+        return graph.knotCount()        + " / " +
+            graph.nodeCount()           + " / " +
+            graph.edgeCount()           + " / " +
+            graph.crossingCount(filter) + " / " +
             overlapCount();
     }
 
@@ -105,9 +105,10 @@ final class GraphPainter {
         return Colors.ordinary;
     }
 
-    void update(Graphics g,GNode over, GNode pick,boolean xray) {
+    void update(Graphics g, GNode over, GNode pick, GraphFilter filter, boolean xray) {
         this.over = over;
         this.pick = pick;
+        this.filter = filter;
         updateOffscreenGraphics();
         drawEdges();
         drawNodes(xray);
@@ -140,14 +141,18 @@ final class GraphPainter {
 
     private void drawNodes(boolean xray) {
         for (GNode n : graph.nodes()) {
-            paintNode(n,xray);
+            if (filter.passes(n)) {
+                paintNode(n,xray);
+            }
         }
     }
 
     int overlapCount() {
         var rects = new ArrayList<Rectangle>();
         for (var n : graph.nodes()) {
-            rects.add(new Rectangle(x(n),y(n),paddedWidth(n),paddedHeight));
+            if (filter.passes(n)) {
+                rects.add(new Rectangle(x(n),y(n),paddedWidth(n),paddedHeight));
+            }
         }
         return countOverlaps(rects);
     }
@@ -166,7 +171,9 @@ final class GraphPainter {
 
     private void drawEdges() {
         for (var e : graph.edges()) {
-            drawEdge(e);
+            if (filter.passes(e)) {
+                drawEdge(e);
+            }
         }
     }
 
@@ -209,4 +216,7 @@ final class GraphPainter {
         offGraphics.drawLine(x1, y1, x2, y2);
     }
 
+    int crossingCount() {
+        return graph.crossingCount(filter);
+    }
 }

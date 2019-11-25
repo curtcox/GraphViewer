@@ -61,8 +61,9 @@ final class Solver {
     }
 
     private int defectCount(GraphPainter painter) {
-        int overlaps = painter.overlapCount();
-        return graph.crossingCount() + overlaps * overlaps;
+        int  overlaps = painter.overlapCount();
+        int crossings = painter.crossingCount();
+        return crossings + overlaps * overlaps;
     }
 
 }

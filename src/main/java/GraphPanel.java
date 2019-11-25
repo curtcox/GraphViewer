@@ -7,10 +7,12 @@ final class GraphPanel extends JPanel {
     boolean solve;
     boolean xray;
     boolean knots;
+    private GraphFilter filter;
     private Graph graph;
     private GraphPainter painter;
     private GraphSwitcher switcher;
     private GraphMouseAdapter mouse;
+    private DirtyTracker dirtyTracker = new DirtyTracker();
 
     private GraphPanel() {}
 
@@ -21,6 +23,7 @@ final class GraphPanel extends JPanel {
     }
 
     private void init() {
+        filter = new GraphFilter("");
         mouse = new GraphMouseAdapter(this);
         addMouseListener(mouse);
         addMouseMotionListener(mouse);
@@ -35,11 +38,6 @@ final class GraphPanel extends JPanel {
 
     private void solve() {
         graph.solve(painter,getSize());
-    }
-
-    void scramble() {
-        graph.shake();
-        repaint();
     }
 
     void shake() {
@@ -59,9 +57,14 @@ final class GraphPanel extends JPanel {
         graph = graphMap.source;
     }
 
+    void setFilter(GraphFilter filter) {
+        this.filter = filter;
+        repaint();
+    }
+
     @Override
     public void paint(Graphics g) {
-        painter.update(g,mouse.over,mouse.pick,xray);
+        painter.update(g,mouse.over,mouse.pick,filter,xray);
     }
 
     void createPainter() {
@@ -84,32 +87,23 @@ final class GraphPanel extends JPanel {
         last = now;
     }
 
-    private boolean shouldRepaint() {
-        return relax || solve || dirty(mouse.pick,xray,knots);
-    }
-
     private void advance() {
         checkSpeed();
         if (relax)           { relax(); }
         if (solve)           { solve(); }
-        if (shouldRepaint()) { repaint(); }
+        if (shouldRepaint()) { repaint();}
+    }
+
+    private boolean shouldRepaint() {
+        return relax || solve || dirty();
+    }
+
+    private boolean dirty() {
+        return dirtyTracker.dirty(mouse.pick,filter,xray,knots);
     }
 
     private static void println(String s) {
         System.out.println(s);
-    }
-
-    private GNode lastPick = GNode.of("");
-    private boolean lastXray;
-    private boolean lastKnots;
-    private boolean dirty(GNode pick,boolean xray,boolean knots) {
-        boolean clean = pick   == lastPick &&
-                        xray   == lastXray &&
-                        knots  == lastKnots;
-        lastPick   = pick;
-        lastXray   = xray;
-        lastKnots  = knots;
-        return !clean;
     }
 
 }

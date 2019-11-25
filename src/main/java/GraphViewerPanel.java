@@ -5,7 +5,7 @@ class GraphViewerPanel extends JPanel {
 
     private final GraphPanel    panel = GraphPanel.newInstance();
     private final JPanel controlPanel = new JPanel();
-    private final JButton    scramble = new JButton("Scramble");
+    private final FilterPanel  filter = new FilterPanel(panel);
     private final JButton       shake = new JButton("Shake");
     private final JCheckBox      xray = new JCheckBox("X-ray");
     private final JCheckBox     relax = new JCheckBox("Relax");
@@ -22,13 +22,12 @@ class GraphViewerPanel extends JPanel {
         add("Center", panel);
         add("South", controlPanel);
 
-        controlPanel.add(scramble);
+        controlPanel.add(filter);
         controlPanel.add(shake);
         controlPanel.add(xray);
         controlPanel.add(relax);
         controlPanel.add(solve);
         controlPanel.add(knots);
-        scramble.addActionListener(e -> scramble());
         shake.addActionListener(e -> shake());
         xray.addActionListener(e -> panel.xray = xray.isSelected());
         relax.addActionListener(e -> panel.relax = relax.isSelected());
@@ -41,10 +40,6 @@ class GraphViewerPanel extends JPanel {
         graph.markCycles();
         panel.setGraphs(KnotGraphConstructor.makeFrom(graph));
         panel.start();
-    }
-
-    private void scramble() {
-        panel.scramble();
     }
 
     private void shake() {

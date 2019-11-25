@@ -26,11 +26,12 @@ final class Graph {
     int nodeCount() { return nodes.length; }
     int knotCount() { return knots().length; }
     int edgeCount() { return edges.length; }
-    int crossingCount() {
+
+    int crossingCount(GraphFilter filter) {
         int count = 0;
         for (var e1 : edges) {
             for (var e2 : edges) {
-                if (e1 != e2 && e1.crosses(e2)) {
+                if (e1 != e2 && filter.passes(e1) && filter.passes(e2) && e1.crosses(e2)) {
                     count++;
                 }
             }
