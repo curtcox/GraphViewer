@@ -1,3 +1,5 @@
+package com.curtcox.graphviewer;
+
 class XY {
 
     final double x;

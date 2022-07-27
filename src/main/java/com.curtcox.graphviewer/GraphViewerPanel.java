@@ -1,3 +1,5 @@
+package com.curtcox.graphviewer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;

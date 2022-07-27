@@ -1,3 +1,5 @@
+package com.curtcox.graphviewer;
+
 import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 import static java.awt.geom.Line2D.linesIntersect;

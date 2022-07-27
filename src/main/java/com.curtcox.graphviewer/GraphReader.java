@@ -1,3 +1,5 @@
+package com.curtcox.graphviewer;
+
 import java.util.*;
 
 import static java.lang.Math.random;

@@ -1,3 +1,5 @@
+package com.curtcox.graphviewer;
+
 import static org.junit.Assert.*;
 import org.junit.Test;
 

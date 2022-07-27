@@ -1,3 +1,5 @@
+package com.curtcox.graphviewer;
+
 import java.awt.*;
 
 import static java.lang.Math.*;
