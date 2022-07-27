@@ -4,9 +4,11 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-class GraphPainter {
+final class GraphPainter {
 
+    private GNode over;
     private GNode pick;
+    private GraphFilter filter = new GraphFilter("");
     private final Graph graph;
     private final GraphPanel panel;
     private final FontMetrics fm;
@@ -46,21 +48,21 @@ class GraphPainter {
         offGraphics.drawString(n.label, cx - width(n) / 2, cy - nodeHeight / 2 + nodeAscent);
     }
 
-    int paddedWidth(GNode n) {
+    private int paddedWidth(GNode n) {
         return width(n) + 10;
     }
 
-    int x(GNode n) {
+    private int x(GNode n) {
         int cx = (int) n.x();
         return cx - paddedWidth(n) / 2;
     }
 
-    int y(GNode n) {
+    private int y(GNode n) {
         int cy = (int) n.y();
         return cy - paddedHeight / 2;
     }
 
-    int width(GNode n) {
+    private int width(GNode n) {
         return fm.stringWidth(n.label);
     }
 
@@ -70,39 +72,47 @@ class GraphPainter {
     }
 
     private void drawStats() {
-        String s = stats();
-        Dimension d = size();
+        var s = stats();
+        var d = size();
         int x = d.width  - fm.stringWidth(s);
         int y = d.height - fm.getHeight();
         offGraphics.drawString(s, x, y);
     }
 
     private String stats() {
-        return graph.nodeCount()  + " / " +
-            graph.edgeCount()     + " / " +
-            graph.crossingCount() + " / " +
+        return graph.knotCount()        + " / " +
+            graph.nodeCount()           + " / " +
+            graph.edgeCount()           + " / " +
+            graph.crossingCount(filter) + " / " +
             overlapCount();
     }
 
-    private static final Color nodeColor = new Color(250, 220, 100);
-    private static final Color cycleColor = new Color(200, 200, 200);
-    private void setColor(Graphics g, GNode n) {
-        var  fixedColor = Color.red;
-        var selectColor = Color.pink;
-        var color = n.fixed ? fixedColor : nodeColor;
-        if (n==pick) {
-            color = selectColor;
-        }
-        if (n.isInCycle) {
-            color = cycleColor;
-        }
-        g.setColor(color);
+    private static final Color color(Knot knot) {
+        return Colors.unique(knot.number);
     }
 
-    void update(Graphics g,GNode pick,boolean stress,boolean xray) {
+    private void setColor(Graphics g, GNode n) {
+        g.setColor(nodeColor(n));
+    }
+
+    boolean isSelected(GNode n) { return n == pick; }
+    boolean isInSelectedKnot(GNode n) {
+        return pick != null && pick.knot.contains(n);
+    }
+
+    private Color nodeColor(GNode n) {
+        if (isSelected(n))                 { return Colors.selectedNode;  }
+        if (isInSelectedKnot(n))           { return Colors.selectedKnot; }
+        if (n.isInKnotWithMultipleNodes()) { return color(n.knot); }
+        return Colors.ordinary;
+    }
+
+    void update(Graphics g, GNode over, GNode pick, GraphFilter filter, boolean xray) {
+        this.over = over;
         this.pick = pick;
+        this.filter = filter;
         updateOffscreenGraphics();
-        drawEdges(stress);
+        drawEdges();
         drawNodes(xray);
         drawStats();
         g.drawImage(offscreen, 0, 0, null);
@@ -133,22 +143,26 @@ class GraphPainter {
 
     private void drawNodes(boolean xray) {
         for (GNode n : graph.nodes()) {
-            paintNode(n,xray);
+            if (filter.passes(n)) {
+                paintNode(n,xray);
+            }
         }
     }
 
     int overlapCount() {
-        List<Rectangle> rects = new ArrayList<>();
-        for (GNode n : graph.nodes()) {
-            rects.add(new Rectangle(x(n),y(n),paddedWidth(n),paddedHeight));
+        var rects = new ArrayList<Rectangle>();
+        for (var n : graph.nodes()) {
+            if (filter.passes(n)) {
+                rects.add(new Rectangle(x(n),y(n),paddedWidth(n),paddedHeight));
+            }
         }
         return countOverlaps(rects);
     }
 
     private int countOverlaps(List<Rectangle> rects) {
         int count = 0;
-        for (Rectangle r1 : rects) {
-            for (Rectangle r2 : rects) {
+        for (var r1 : rects) {
+            for (var r2 : rects) {
                 if (r1 != r2 && r1.intersects(r2)) {
                     count++;
                 }
@@ -157,35 +171,54 @@ class GraphPainter {
         return count;
     }
 
-    private void drawEdges(boolean stress) {
-        for (GEdge e : graph.edges()) {
-            drawEdge(e,stress);
+    private void drawEdges() {
+        for (var e : graph.edges()) {
+            if (filter.passes(e)) {
+                drawEdge(e);
+            }
         }
     }
 
-    private void drawEdge(GEdge e, boolean stress) {
+    private boolean isSelected(GEdge e) {
+        return e.from == pick || e.to == pick;
+    }
+
+    private boolean isOver(GEdge e) {
+        return e.from == over || e.to == over;
+    }
+
+    private void drawEdge(GEdge e) {
         int x1 = (int) e.from.x();
         int y1 = (int) e.from.y();
         int x2 = (int) e.to.x();
         int y2 = (int) e.to.y();
-        int len = e.len();
-        drawEdgeLine(x1,y1,x2,y2,len);
-        if (stress) {
-            labelEdgeStress(x1,y1,x2,y2,len);
-        }
+        setLineColor(e);
+        drawEdgeLine(x1,y1,x2,y2);
     }
 
-    private void drawEdgeLine(int x1, int y1, int x2, int y2, int len) {
-        offGraphics.setColor((len < 10)
-                ? Color.black
-                : (len < 20 ? Color.pink : Color.red));
+    private void setLineColor(GEdge e) {
+        offGraphics.setColor(color(e));
+    }
+
+    private Color color(GEdge e) {
+        if (over==null) {
+            return Colors.line;
+        }
+        if (isOver(e)) {
+            return isGoingInto(e,over) ? Colors.incomingLine : Colors.outgoingLine;
+        }
+        return Colors.unselectedLine;
+    }
+
+    private boolean isGoingInto(GEdge e, GNode pick) {
+        return e.to == pick;
+    }
+
+    private void drawEdgeLine(int x1, int y1, int x2, int y2) {
         offGraphics.drawLine(x1, y1, x2, y2);
     }
 
-    private void labelEdgeStress(int x1, int y1, int x2, int y2, int len) {
-        String lbl = String.valueOf(len);
-        offGraphics.setColor(Color.darkGray);
-        offGraphics.drawString(lbl, x1 + (x2 - x1) / 2, y1 + (y2 - y1) / 2);
+    int crossingCount() {
+        return graph.crossingCount(filter);
     }
-
 }

@@ -19,9 +19,7 @@ class GraphReader {
     Graph read() {
         addEdges();
         addCenter();
-        var graph = new Graph(edges,nodes);
-        graph.markCycles();
-        return graph;
+        return new Graph(edges,nodes);
     }
 
     private GNode findNodeFromLabel(String lbl) {
@@ -41,8 +39,8 @@ class GraphReader {
     }
 
     private GNode newNodeAtRandomLocation(String lbl) {
-        var n = new GNode(lbl);
-        n.setXY(10 + 380 * random(),10 + 380 * random());
+        var n = GNode.of(lbl);
+        n.setXY(new XY(10 + 380 * random(),10 + 380 * random()));
         return n;
     }
 
@@ -97,8 +95,7 @@ class GraphReader {
     private void addCenter() {
         if (center != null) {
             var n = findNodeFromLabel(center);
-            n.setXY(500,500);
-            n.fixed = true;
+            n.setXY(new XY(500,500));
         }
     }
 

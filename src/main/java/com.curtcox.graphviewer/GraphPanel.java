@@ -2,76 +2,37 @@ package com.curtcox.graphviewer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
-class GraphPanel extends JPanel {
+final class GraphPanel extends JPanel {
 
-    Graph graph;
-    boolean stress;
     boolean relax;
     boolean solve;
     boolean xray;
-    private int numMouseButtonsDown;
-    private GNode pick;
-    private boolean pickfixed;
+    boolean knots;
+    private GraphFilter filter;
+    private Graph graph;
     private GraphPainter painter;
+    private GraphSwitcher switcher;
+    private GraphMouseAdapter mouse;
+    private DirtyTracker dirtyTracker = new DirtyTracker();
 
-    class GraphMouseAdapter extends MouseAdapter {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            numMouseButtonsDown++;
-            int x = e.getX();
-            int y = e.getY();
-            GNode nearest = graph.findNearestNode(x,y);
-            dragNode(nearest,x,y);
-            if (rightButton(e)) {
-                System.out.println(nearest);
-            }
-            finish(e);
-        }
+    private GraphPanel() {}
 
-        boolean rightButton(MouseEvent e) {
-            return e.getButton() == MouseEvent.BUTTON3;
-        }
-
-        void dragNode(GNode node, int x, int y) {
-            pick = node;
-            pickfixed = pick.fixed;
-            pick.fixed = true;
-            pick.setXY(x,y);
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-            numMouseButtonsDown--;
-
-            pick.fixed = pickfixed;
-            pick.setXY(e.getX(),e.getY());
-            if (numMouseButtonsDown == 0) {
-                pick = null;
-            }
-            finish(e);
-        }
-
-        void finish(MouseEvent e) {
-            repaint();
-            e.consume();
-        }
+    static GraphPanel newInstance() {
+        var panel = new GraphPanel();
+        panel.init();
+        return panel;
     }
 
-    class GraphMouseMotionListener extends MouseAdapter {
-        @Override
-        public void mouseDragged(MouseEvent e) {
-            pick.setXY(e.getX(),e.getY());
-            repaint();
-            e.consume();
-        }
+    private void init() {
+        filter = new GraphFilter("");
+        mouse = new GraphMouseAdapter(this);
+        addMouseListener(mouse);
+        addMouseMotionListener(mouse);
     }
 
-    GraphPanel() {
-        addMouseListener(new GraphMouseAdapter());
-        addMouseMotionListener(new GraphMouseMotionListener());
-    }
+    GNode findNearestNode(XY xy) { return graph.findNearestNode(xy); }
+    GNode findNodeUnderMouse(XY xy) { return graph.findNodeUnderMouse(xy); }
 
     private void relax() {
         graph.relax(getSize());
@@ -81,55 +42,70 @@ class GraphPanel extends JPanel {
         graph.solve(painter,getSize());
     }
 
-    void scramble() {
-        graph.shake();
-        repaint();
-    }
-
     void shake() {
         graph.scramble(getSize());
         repaint();
     }
 
+    void setKnots(boolean knots) {
+        graph = switcher.setKnots(knots);
+        this.knots = knots;
+        createPainter();
+        repaint();
+    }
+
+    void setGraphs(GraphMap graphMap) {
+        switcher = new GraphSwitcher(graphMap);
+        graph = graphMap.source;
+    }
+
+    void setFilter(GraphFilter filter) {
+        this.filter = filter;
+        repaint();
+    }
+
     @Override
     public void paint(Graphics g) {
-        painter.update(g,pick,stress,xray);
+        painter.update(g,mouse.over,mouse.pick,filter,xray);
+    }
+
+    void createPainter() {
+        painter = new GraphPainter(graph,this);
     }
 
     public void start() {
         println("Start");
-        painter = new GraphPainter(graph,this);
+        createPainter();
         new Timer(25, evt -> advance()).start();
     }
 
     private long last;
-    private void advance() {
+    private void checkSpeed() {
         long now = System.currentTimeMillis();
         long duration = now - last;
         if (duration > 200) {
             println(duration + "ms");
         }
         last = now;
-        if (relax) { relax(); }
-        if (solve) { solve(); }
-        if (relax || solve || dirty(pick,stress,xray)) {
-            repaint();
-        }
     }
 
-    static void println(String s) {
+    private void advance() {
+        checkSpeed();
+        if (relax)           { relax(); }
+        if (solve)           { solve(); }
+        if (shouldRepaint()) { repaint();}
+    }
+
+    private boolean shouldRepaint() {
+        return relax || solve || dirty();
+    }
+
+    private boolean dirty() {
+        return dirtyTracker.dirty(mouse.pick,filter,xray,knots);
+    }
+
+    private static void println(String s) {
         System.out.println(s);
-    }
-
-    private GNode lastPick = new GNode("");
-    private boolean lastStress;
-    private boolean lastXray;
-    private boolean dirty(GNode pick,boolean stress,boolean xray) {
-        boolean clean = pick == lastPick && stress == lastStress && xray == lastXray;
-        lastPick = pick;
-        lastStress = stress;
-        lastXray = xray;
-        return !clean;
     }
 
 }

@@ -1,10 +1,9 @@
 package com.curtcox.graphviewer;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.sqrt;
+import static java.lang.Math.*;
 import static java.awt.geom.Line2D.linesIntersect;
 
-class GEdge {
+final class GEdge {
 
     final GNode from;
     final GNode to;
@@ -77,12 +76,8 @@ class GEdge {
         return (actualLength == 0) ? .0001 : actualLength;
     }
 
-    int len() {
-        return (int) abs(actualLength() - desiredLength);
-    }
-
     public String toString() {
-        return from.label + " / " + to.label;
+        return from.label + " > " + to.label;
     }
 
 }

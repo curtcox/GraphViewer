@@ -1,6 +1,6 @@
 package com.curtcox.graphviewer;
 
-class XY {
+final class XY {
 
     final double x;
     final double y;

@@ -1,1 +1,1 @@
-java -cp src Start
+java -cp build/classes/java/main Start
